@@ -1,0 +1,122 @@
+/* Dark Mode Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    background-color: #121212; /* Dunkler Hintergrund */
+    color: #e0e0e0; /* Heller Text */
+}
+
+/* Zentrierter Inhalt mit smooth transitions */
+#centered-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.5s ease-in-out;
+}
+
+/* Smoothes Ausblenden des zentrierten Inhalts */
+#centered-content.hidden {
+    transform: translateY(-100px); /* Nach oben schieben */
+    opacity: 0; /* Transparenz für smoothes Ausblenden */
+}
+
+#shelfspace-title {
+    font-family: 'Roboto', sans-serif; /* Moderne Schrift */
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: #ffffff; /* Weiße Schrift */
+}
+
+input[type="text"] {
+    width: 300px;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    background-color: #333; /* Dunkles Eingabefeld */
+    color: #e0e0e0; /* Heller Text */
+    border: 1px solid #444; /* Dünne, dunkle Umrandung */
+    transition: all 0.5s ease-in-out; /* Transition für smoothes Ein- und Ausblenden */
+}
+
+button {
+    padding: 10px;
+    font-size: 1.2rem;
+    background-color: #3b3b3b; /* Dunkler Button */
+    color: #e0e0e0; /* Heller Text */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out; /* Weicher Übergang beim Hover */
+}
+
+button:hover {
+    background-color: #4a4a4a; /* Helleres Grau beim Hover */
+}
+
+/* Such-Button ausblenden */
+button.hidden {
+    display: none;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 20px;
+    width: 80%;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out; /* Smoothes Einblenden */
+}
+
+ul.show {
+    opacity: 1; /* Ergebnisse sanft einblenden */
+}
+
+li {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+    padding: 10px;
+    border: 1px solid #333; /* Dünne Umrandung */
+    border-radius: 5px;
+    width: 100%;
+    background-color: #1e1e1e; /* Dunkler Listeneintrag */
+    color: #e0e0e0;
+}
+
+img {
+    max-width: 50px;
+    max-height: 50px;
+    margin-right: 10px;
+    border-radius: 5px;
+    border: 1px solid #444; /* Umrandung für das Bild */
+}
+
+/* Zurück-Button smooth einblenden */
+#backButton {
+    margin-top: 20px;
+    padding: 10px;
+    font-size: 1.2rem;
+    background-color: #3b3b3b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+#backButton.show {
+    opacity: 1; /* Button smooth einblenden */
+}
+
+#backButton:hover {
+    background-color: #4a4a4a;
+}
