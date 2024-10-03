@@ -1,0 +1,133 @@
+/* Allgemeine Seite */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+/* Container für das Layout */
+#container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Linke Seitenleiste */
+#sidebar {
+    background-color: #1e1e1e;
+    padding: 20px;
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#sidebar h2 {
+    color: #ffffff;
+}
+
+#sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#sidebar ul li {
+    margin: 20px 0;
+    cursor: pointer;
+    color: #cccccc;
+    font-size: 18px;
+}
+
+#sidebar ul li:hover {
+    color: #ffffff;
+}
+
+/* Logout-Button */
+#backToAccountButton {
+    background-color: #333;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 100%;
+}
+
+#backToAccountButton:hover {
+    background-color: #444;
+}
+
+/* Hauptinhalt */
+#main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+/* Header für Begrüßung und Buttons */
+#header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#greeting {
+    font-size: 24px;
+}
+
+#header-buttons button {
+    background-color: #333;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+#header-buttons button:hover {
+    background-color: #444;
+}
+
+/* Bücherregale */
+#shelves {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Regal-Box */
+.shelf {
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.shelf h3 {
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+/* Bücherregal */
+.bookshelf {
+    display: flex;
+    gap: 10px;
+}
+
+.book {
+    background-color: #333;
+    color: #ffffff;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+    width: 100px;
+    cursor: pointer;
+}
+
+.book:hover {
+    background-color: #444;
+}

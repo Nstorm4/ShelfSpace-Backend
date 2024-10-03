@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Übersichtsseite</title>
+  <link rel="stylesheet" href="../CSS/OverviewPage.css">
+</head>
+<body>
+<div id="container">
+  <!-- Linke Seitenleiste -->
+  <div id="sidebar">
+    <h2>Menu</h2>
+    <ul>
+      <li>My books</li>
+      <li>Goals</li>
+      <li>Statistics</li>
+      <li>Search</li>
+    </ul>
+    <!-- Log out Button -->
+    <button id="backToAccountButton">Log out</button>
+  </div>
+
+  <!-- Hauptinhalt -->
+  <div id="main-content">
+    <div id="header">
+      <div id="greeting"></div>
+      <!-- Buttons oben rechts -->
+      <div id="header-buttons">
+        <button id="addShelfButton">Add shelf</button>
+        <button id="searchButton">Search</button>
+      </div>
+    </div>
+
+    <!-- Bücherregale anzeigen -->
+    <div id="shelves">
+      <div class="shelf">
+        <h3>Reading</h3>
+        <!-- Buchregal mit Büchern -->
+        <div class="bookshelf">
+          <!-- Beispiel Bücher (später dynamisch hinzufügen) -->
+          <div class="book">Book 1</div>
+          <div class="book">Book 2</div>
+          <div class="book">+ Add book</div>
+        </div>
+      </div>
+      <div class="shelf">
+        <h3>To read</h3>
+        <div class="bookshelf">
+          <div class="book">Book 3</div>
+          <div class="book">Book 4</div>
+          <div class="book">+ Add book</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../JavaScript/OverviewPage.js"></script>
+</body>
+</html>

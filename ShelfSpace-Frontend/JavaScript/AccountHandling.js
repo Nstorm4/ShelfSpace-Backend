@@ -7,7 +7,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     // Simulierter Login-Prozess. Später durch eine Datenbankabfrage ersetzen.
     if (username === 'admin' && password === 'admin') {
         // Login erfolgreich, zur Suchseite weiterleiten
-        window.location.href = 'SearchView.html';
+        window.location.href = 'OverviewPage.html';
     } else {
         // Fehlermeldung anzeigen
         document.getElementById('error-message').classList.remove('hidden');
