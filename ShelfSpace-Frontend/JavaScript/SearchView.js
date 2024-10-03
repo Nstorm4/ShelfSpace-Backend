@@ -76,8 +76,8 @@ document.getElementById('backButton').addEventListener('click', function () {
         document.getElementById('titleInput').style.display = 'inline-block';
     }, 500); // Zeige sie nach der Animation wieder
 });
-document.getElementById('backToAccountButton').addEventListener('click', function() {
-    window.location.href = 'AccountHandling.html'; // Link zur Account-Seite
+document.getElementById('backToShelfspace').addEventListener('click', function() {
+    window.location.href = 'OverviewPage.html'; // Link zur Account-Seite
 });
 document.getElementById('backButton').classList.add('show');
 document.getElementById('backToAccountButton').classList.add('show');

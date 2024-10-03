@@ -44,6 +44,7 @@ input[type="text"] {
     color: #e0e0e0; /* Heller Text */
     border: 1px solid #444; /* Dünne, dunkle Umrandung */
     transition: all 0.5s ease-in-out; /* Transition für smoothes Ein- und Ausblenden */
+    border-radius: 5px;
 }
 
 /* Buttons */

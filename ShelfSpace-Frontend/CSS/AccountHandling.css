@@ -58,7 +58,7 @@ body {
     border: 1px solid #444;
 }
 
-#loginButton {
+#loginButton , #signUpButton{
     padding: 10px;
     font-size: 1.2rem;
     background-color: #3b3b3b;
@@ -68,15 +68,16 @@ body {
     cursor: pointer;
     transition: background-color 0.3s ease;
     width: 98%;
+    margin-bottom: 10px;
 
 }
 
-#loginButton:hover {
+#loginButton, #signUpButton:hover {
     background-color: #4a4a4a;
 }
 
 #login-container p {
-    margin-top: 20px;
+    margin-top: 25px;
     color: red;
 }
 
