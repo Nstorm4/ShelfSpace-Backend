@@ -31,3 +31,5 @@ document.addEventListener("DOMContentLoaded", function () {
         window.location.href = 'AccountHandling.html'; // Link zur Account-Seite
     });
 });
+// document.getElementById('backButton').classList.add('show');
+// document.getElementById('backToAccountButton').classList.add('show');

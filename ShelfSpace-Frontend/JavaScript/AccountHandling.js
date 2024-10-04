@@ -8,8 +8,10 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     if (username === 'admin' && password === 'admin') {
         // Login erfolgreich, zur Suchseite weiterleiten
         window.location.href = 'OverviewPage.html';
+        console.log("login successful");
     } else {
         // Fehlermeldung anzeigen
+        console.log("login was not successful");
         document.getElementById('error-message').classList.remove('hidden');
     }
 });

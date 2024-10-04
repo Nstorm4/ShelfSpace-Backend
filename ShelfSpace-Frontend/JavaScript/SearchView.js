@@ -1,6 +1,8 @@
 document.getElementById('searchButton').addEventListener('click', function () {
     const title = document.getElementById('titleInput').value;
     const url = `https://shelfspacebackend-happy-gecko-kb.apps.01.cf.eu01.stackit.cloud/books?title=${encodeURIComponent(title)}`;
+    // const url = `http://localhost:8080/books?title=${encodeURIComponent(title)}`;
+
 
     fetch(url)
         .then(response => {
@@ -79,6 +81,5 @@ document.getElementById('backButton').addEventListener('click', function () {
 document.getElementById('backToShelfspace').addEventListener('click', function() {
     window.location.href = 'OverviewPage.html'; // Link zur Account-Seite
 });
-document.getElementById('backButton').classList.add('show');
-document.getElementById('backToAccountButton').classList.add('show');
+
 
