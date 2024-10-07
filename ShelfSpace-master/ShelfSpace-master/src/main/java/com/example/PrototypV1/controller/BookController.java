@@ -22,9 +22,9 @@ public class BookController {
     private BookService bookService;
     @CrossOrigin(origins = "http://localhost:63342")
     @GetMapping("/books")
-    public ResponseEntity<String> searchBooks(@RequestParam String title) {
+    public String searchBooks(@RequestParam String title) {
         try {
-            ResponseEntity<String> books = bookService.searchBooksByTitle(title);
+            String books = bookService.searchBooksByTitle(title);
 
 //            // Extrahiere Titel, Autoren und Thumbnails
 //            List<BookDTO> bookDTOs = books.stream()
@@ -34,7 +34,7 @@ public class BookController {
             return books;
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-            return new ResponseEntity<String>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return e.toString();
         }
     }
 }

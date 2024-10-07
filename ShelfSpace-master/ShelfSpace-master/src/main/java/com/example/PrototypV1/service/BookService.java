@@ -22,7 +22,7 @@ public class BookService {
 
     private RestTemplate restTemplate = new RestTemplate();
 
-    public ResponseEntity<String> searchBooksByTitle(String title) throws JsonProcessingException {
+    public String searchBooksByTitle(String title) throws JsonProcessingException {
         String url = "https://www.googleapis.com/books/v1/volumes?q=intitle:" + title + "&key={apiKey}";
 
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class, Collections.singletonMap("apiKey", apiKey));
@@ -40,6 +40,6 @@ public class BookService {
 //            }
 //        }
 
-        return response;
+        return response.getBody();
     }
 }
