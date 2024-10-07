@@ -1,8 +1,6 @@
 document.getElementById('searchButton').addEventListener('click', function () {
     const title = document.getElementById('titleInput').value;
     const url = `https://shelfspacebackend-happy-gecko-kb.apps.01.cf.eu01.stackit.cloud/books?title=${encodeURIComponent(title)}`;
-    // const url = `http://localhost:8080/books?title=${encodeURIComponent(title)}`;
-
 
     fetch(url)
         .then(response => {
@@ -12,6 +10,7 @@ document.getElementById('searchButton').addEventListener('click', function () {
             return response.json();
         })
         .then(data => {
+
             const resultsList = document.getElementById('resultsList');
             resultsList.innerHTML = ''; // Alte Ergebnisse löschen
 
@@ -26,16 +25,24 @@ document.getElementById('searchButton').addEventListener('click', function () {
 
             // Smooth einblenden der Ergebnisse
             setTimeout(() => {
-                data.forEach(book => {
+                // Google Books API liefert ein 'items'-Array
+                const books = data.items || [];
+
+                books.forEach(item => {
+                    const book = item.volumeInfo; // 'volumeInfo' enthält die Buchdetails in der Google Books API
+
                     const li = document.createElement('li');
 
+                    // Thumbnail-Bild (wenn vorhanden)
                     const img = document.createElement('img');
-                    img.src = book.thumbnail || 'https://via.placeholder.com/50';
+                    img.src = (book.imageLinks && book.imageLinks.thumbnail) || 'https://via.placeholder.com/50';
                     img.alt = `${book.title} Cover`;
 
+                    // Buchtitel
                     const titleText = document.createElement('strong');
                     titleText.textContent = `${book.title}`;
 
+                    // Autoren (falls vorhanden)
                     let text = '';
                     if (book.authors) {
                         text += `, Autoren: ${book.authors.join(', ')}`;
@@ -45,9 +52,15 @@ document.getElementById('searchButton').addEventListener('click', function () {
 
                     const textNode = document.createTextNode(text);
 
+                    // Elemente hinzufügen
                     li.appendChild(img);
                     li.appendChild(titleText);
                     li.appendChild(textNode);
+
+                    // **Füge hier den Event-Listener zum Öffnen des Modals hinzu**
+                    li.addEventListener('click', function () {
+                        openModal(book); // Öffne Modal mit den Buchinformationen
+                    });
 
                     resultsList.appendChild(li);
                 });
@@ -59,6 +72,7 @@ document.getElementById('searchButton').addEventListener('click', function () {
             console.error('Fehler:', error);
         });
 });
+
 
 // "Zurück"-Button Funktionalität
 document.getElementById('backButton').addEventListener('click', function () {
@@ -78,8 +92,34 @@ document.getElementById('backButton').addEventListener('click', function () {
         document.getElementById('titleInput').style.display = 'inline-block';
     }, 500); // Zeige sie nach der Animation wieder
 });
+
 document.getElementById('backToShelfspace').addEventListener('click', function() {
     window.location.href = 'OverviewPage.html'; // Link zur Account-Seite
 });
+// Öffnet das Modal mit den Buchdetails
+function openModal(bookInfo) {
+    document.getElementById('modalTitle').textContent = bookInfo.title || 'Kein Titel';
+    document.getElementById('modalAuthors').textContent = bookInfo.authors ? bookInfo.authors.join(', ') : 'Keine Autorenangabe';
+    document.getElementById('modalPublishedDate').textContent = bookInfo.publishedDate || 'Keine Angaben';
+    document.getElementById('modalPageCount').textContent = bookInfo.pageCount ? bookInfo.pageCount + ' Seiten' : 'Keine Angaben';
+    document.getElementById('modalDescription').textContent = bookInfo.description || 'Keine Beschreibung verfügbar';
+    document.getElementById('modalCover').src = bookInfo.imageLinks ? bookInfo.imageLinks.thumbnail : 'https://via.placeholder.com/100';
 
+    document.getElementById('bookModal').style.display = 'flex';
+    document.body.classList.add('modal-open'); // Verhindert Scrollen des Bodys
+}
 
+// Schließt das Modal
+function closeModal() {
+    document.getElementById('bookModal').style.display = 'none';
+    document.body.classList.remove('modal-open'); // Erlaubt wieder das Scrollen
+}
+
+// Klick auf Modal-Hintergrund schließt das Modal
+window.onclick = function(event) {
+    const modal = document.getElementById('bookModal');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+        document.body.classList.remove('modal-open'); // Erlaubt wieder das Scrollen
+    }
+}
