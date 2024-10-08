@@ -54,7 +54,7 @@ document.getElementById('searchButton').addEventListener('click', function () {
 
                     // Plus-Button
                     const addButton = document.createElement('button');
-                    addButton.textContent = '+';
+                    addButton.textContent = '+ add to shelf';
                     addButton.classList.add('add-button');
 
                     // Füge einen Event-Listener für den Plus-Button hinzu
