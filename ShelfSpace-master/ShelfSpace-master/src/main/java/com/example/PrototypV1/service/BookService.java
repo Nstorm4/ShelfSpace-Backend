@@ -1,18 +1,12 @@
 package com.example.PrototypV1.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import javax.naming.directory.*;
-import java.awt.print.Book;
 import java.util.*;
-import com.example.PrototypV1.model.SearchResult;
-import java.util.stream.Collectors;
 
 @Service
 public class BookService {
