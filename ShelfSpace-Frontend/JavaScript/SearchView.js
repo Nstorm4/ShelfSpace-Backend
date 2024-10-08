@@ -69,8 +69,6 @@ document.getElementById('searchButton').addEventListener('click', function () {
 
                         // TODO:
                         // Weitere Logik zum Hinzufügen des Buchs zu einem Regal kann hier implementiert werden
-
-
                     });
 
                     //Elemente hinzufügen
@@ -117,6 +115,7 @@ document.getElementById('backButton').addEventListener('click', function () {
 document.getElementById('backToShelfspace').addEventListener('click', function() {
     window.location.href = 'OverviewPage.html'; // Link zur Account-Seite
 });
+
 // Öffnet das Modal mit den Buchdetails
 function openModal(bookInfo) {
     document.getElementById('modalTitle').textContent = bookInfo.title || 'Kein Titel';
@@ -143,4 +142,11 @@ window.onclick = function(event) {
         modal.style.display = 'none';
         document.body.classList.remove('modal-open'); // Erlaubt wieder das Scrollen
     }
-}
+};
+
+// Event-Listener für "Enter"-Taste im Eingabefeld
+document.getElementById('titleInput').addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') {
+        document.getElementById('searchButton').click(); // Simuliere einen Klick auf den Suchbutton
+    }
+});
