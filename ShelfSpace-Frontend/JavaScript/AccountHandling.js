@@ -25,7 +25,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
         .then(data => {
             if (data) {
                 console.log("Login erfolgreich");
-                window.location.href = 'OverviewPage.html'; // Weiterleitung bei erfolgreichem Login
+                window.location.href = 'HomePage.html'; // Weiterleitung bei erfolgreichem Login
             } else {
                 document.getElementById('error-message').classList.remove('hidden');
             }

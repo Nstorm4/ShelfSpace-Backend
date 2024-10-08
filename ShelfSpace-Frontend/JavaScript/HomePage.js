@@ -1,9 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const greetingElement = document.getElementById("greeting");
 
-    // Fiktiver Benutzername (später aus der Datenbank abrufen)
-    const accountName = "Niklas";
-
     // Uhrzeitbasiertes Begrüßungssystem
     const currentHour = new Date().getHours();
     let greetingText = "Guten Tag";
@@ -16,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
         greetingText = "Guten Abend";
     }
 
-    greetingElement.textContent = `${greetingText}, ${accountName}`;
+    greetingElement.textContent = `${greetingText}`;
 
     // Button-Verlinkungen
     document.getElementById("addShelfButton").addEventListener("click", function () {

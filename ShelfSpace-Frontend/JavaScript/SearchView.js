@@ -113,7 +113,7 @@ document.getElementById('backButton').addEventListener('click', function () {
 });
 
 document.getElementById('backToShelfspace').addEventListener('click', function() {
-    window.location.href = 'OverviewPage.html'; // Link zur Account-Seite
+    window.location.href = 'HomePage.html'; // Link zur Account-Seite
 });
 
 // Öffnet das Modal mit den Buchdetails
