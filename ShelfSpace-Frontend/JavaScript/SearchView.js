@@ -73,7 +73,7 @@ document.getElementById('searchButton').addEventListener('click', function () {
 
                     });
 
-                    // Elemente hinzufügen
+                    //Elemente hinzufügen
                     li.appendChild(img);
                     li.appendChild(titleText);
                     li.appendChild(textNode);
