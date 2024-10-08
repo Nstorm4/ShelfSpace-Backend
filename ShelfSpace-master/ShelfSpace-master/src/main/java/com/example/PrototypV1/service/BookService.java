@@ -23,7 +23,7 @@ public class BookService {
     private RestTemplate restTemplate = new RestTemplate();
 
     public String searchBooksByTitle(String title) throws JsonProcessingException {
-        String url = "https://www.googleapis.com/books/v1/volumes?q=intitle:" + title + "&key={apiKey}";
+        String url = "https://www.googleapis.com/books/v1/volumes?q=intitle:" + title + "&maxResults=20&key={apiKey}";
 
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class, Collections.singletonMap("apiKey", apiKey));
 
