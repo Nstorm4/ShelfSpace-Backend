@@ -28,7 +28,12 @@ document.getElementById('searchButton').addEventListener('click', function () {
                 // Google Books API liefert ein 'items'-Array
                 const books = data.items || [];
 
-                books.forEach(item => {
+                // Filtere Bücher ohne Titel heraus und beschränke die Anzeige auf maximal 10 Bücher
+                const filteredBooks = books
+                    .filter(item => item.volumeInfo && item.volumeInfo.title) // Filtere Bücher ohne Titel
+                    .slice(0, 10); // Begrenze auf 10 Ergebnisse
+
+                filteredBooks.forEach(item => {
                     const book = item.volumeInfo; // 'volumeInfo' enthält die Buchdetails in der Google Books API
 
                     const li = document.createElement('li');
