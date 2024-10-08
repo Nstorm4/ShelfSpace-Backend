@@ -57,7 +57,9 @@ button, #backButton, #backToShelfspace {
     border-radius: 5px;
     cursor: pointer;
     transition: all 0.3s ease-in-out; /* Weicher Übergang beim Hover */
-    margin-top: 20px;
+    margin-top: 2px;
+
+
 }
 
 button:hover, #backButton:hover, #backToAccountButton:hover {
@@ -79,14 +81,19 @@ button.hidden, #backButton.hidden {
 }
 
 /* Ergebnisliste */
+/* Begrenze die Höhe der Ergebnisliste */
 ul {
     list-style-type: none;
     padding: 0;
     margin-top: 20px;
-    width: 80%;
+    width: 120%;
     opacity: 0;
-    transition: opacity 0.5s ease-in-out; /* Smoothes Einblenden */
+    transition: opacity 0.5s ease-in-out;
+    max-height: 1000px; /* Begrenze die Höhe der Liste */
+    max-width: 900px;
+    overflow-y: auto; /* Scrollbar, wenn die Liste die maximale Höhe überschreitet */
 }
+
 
 ul.show {
     opacity: 1; /* Ergebnisse sanft einblenden */
@@ -96,10 +103,10 @@ li {
     display: flex;
     align-items: center;
     margin: 5px 0;
-    padding: 10px;
+    padding: 5px;
     border: 1px solid #333; /* Dünne Umrandung */
     border-radius: 5px;
-    width: 100%;
+    width: 90%;
     background-color: #1e1e1e; /* Dunkler Listeneintrag */
     color: #e0e0e0;
 }
@@ -148,4 +155,19 @@ body.modal-open {
     object-fit: contain; /* Sorgt dafür, dass das Bild in den Bereich passt, ohne verzerrt zu werden */
     border-radius: 5px; /* Optional: Abgerundete Ecken */
     border: 1px solid #444; /* Optional: Bildumrandung */
+}
+
+.add-button {
+    margin-left: auto;
+    padding: 5px 10px;
+    background-color: #4a4a4a;
+    color: #e0e0e0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.add-button:hover {
+    background-color: #6a6a6a;
 }

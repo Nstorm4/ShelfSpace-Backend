@@ -52,10 +52,23 @@ document.getElementById('searchButton').addEventListener('click', function () {
 
                     const textNode = document.createTextNode(text);
 
+                    // Plus-Button
+                    const addButton = document.createElement('button');
+                    addButton.textContent = '+';
+                    addButton.classList.add('add-button');
+
+                    // Füge einen Event-Listener für den Plus-Button hinzu
+                    addButton.addEventListener('click', (event) => {
+                        event.stopPropagation(); // Verhindere, dass der Listeneintrag-Click das Modal öffnet
+                        alert(`${book.title} wurde hinzugefügt!`);
+                        // Weitere Logik zum Hinzufügen des Buchs zu einem Regal kann hier implementiert werden
+                    });
+
                     // Elemente hinzufügen
                     li.appendChild(img);
                     li.appendChild(titleText);
                     li.appendChild(textNode);
+                    li.appendChild(addButton); // Plus-Button hinzufügen
 
                     // **Füge hier den Event-Listener zum Öffnen des Modals hinzu**
                     li.addEventListener('click', function () {
@@ -72,6 +85,9 @@ document.getElementById('searchButton').addEventListener('click', function () {
             console.error('Fehler:', error);
         });
 });
+
+// Rest des Codes bleibt unverändert ...
+
 
 
 // "Zurück"-Button Funktionalität
