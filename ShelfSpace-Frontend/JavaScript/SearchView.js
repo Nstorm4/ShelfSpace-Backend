@@ -61,7 +61,11 @@ document.getElementById('searchButton').addEventListener('click', function () {
                     addButton.addEventListener('click', (event) => {
                         event.stopPropagation(); // Verhindere, dass der Listeneintrag-Click das Modal öffnet
                         alert(`${book.title} wurde hinzugefügt!`);
+
+                        // TODO:
                         // Weitere Logik zum Hinzufügen des Buchs zu einem Regal kann hier implementiert werden
+
+
                     });
 
                     // Elemente hinzufügen
@@ -85,10 +89,6 @@ document.getElementById('searchButton').addEventListener('click', function () {
             console.error('Fehler:', error);
         });
 });
-
-// Rest des Codes bleibt unverändert ...
-
-
 
 // "Zurück"-Button Funktionalität
 document.getElementById('backButton').addEventListener('click', function () {
