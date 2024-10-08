@@ -16,7 +16,6 @@ public class UserService {
         try (InputStream input = new FileInputStream(userPropertiesFile)) {
             properties.load(input);
         } catch (IOException e) {
-            // Wenn die Datei nicht existiert, ist das in Ordnung
         }
 
         properties.setProperty(user.getUsername(), user.getPassword());
@@ -39,4 +38,38 @@ public class UserService {
         String storedPassword = properties.getProperty(username);
         return storedPassword != null && storedPassword.equals(password);
     }
-}
+    public boolean userExists(String username) {
+        Properties properties = new Properties();
+        try (InputStream input = new FileInputStream(userPropertiesFile)) {
+            properties.load(input);
+        } catch (IOException e) {
+            return false;
+        }
+
+        return properties.getProperty(username) != null;
+    }
+        // Methode um alle User aus dem properties File als String oder JSON zurückzugeben
+        public String getAllUsers() throws IOException {
+            Properties properties = new Properties();
+            StringBuilder result = new StringBuilder();
+
+            // Versuche die Properties-Datei zu laden
+            try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(userPropertiesFile)) {
+                if (inputStream == null) {
+                    throw new IOException("Properties file not found: " + userPropertiesFile);
+                }
+
+                // Lade die Inhalte der Properties-Datei
+                properties.load(inputStream);
+
+                // Iteriere über alle Einträge und hänge sie an den result-String an
+                for (String key : properties.stringPropertyNames()) {
+                    String value = properties.getProperty(key);
+                    result.append(key).append("=").append(value).append("\n");
+                }
+            }
+
+            // Rückgabe des gesamten Inhalts als String
+            return result.toString();
+        }
+    }
