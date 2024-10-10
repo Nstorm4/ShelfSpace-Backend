@@ -20,12 +20,17 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
             if (!response.ok) {
                 throw new Error('Login fehlgeschlagen');
             }
-            return response.json();
+            return response.text();  // Da die API das Token als String zurückgibt
         })
-        .then(data => {
-            if (data) {
+        .then(token => {
+            if (token) {
                 console.log("Login erfolgreich");
-                window.location.href = 'HomePage.html'; // Weiterleitung bei erfolgreichem Login
+console.log(token);
+                // Speichere das Token im Local Storage (oder Session Storage)
+                localStorage.setItem('authToken', token);
+
+                // Weiterleitung zu HomePage.html nach erfolgreichem Login
+                window.location.href = 'HomePage.html';
             } else {
                 document.getElementById('error-message').classList.remove('hidden');
             }
@@ -35,6 +40,8 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
             document.getElementById('error-message').classList.remove('hidden');
         });
 });
+
+
 
 // Event für den "Sign Up"-Button
 document.getElementById('signUpButton').addEventListener('click', function(event) {

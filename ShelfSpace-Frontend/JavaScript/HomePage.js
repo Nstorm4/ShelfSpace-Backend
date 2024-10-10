@@ -32,8 +32,39 @@ document.addEventListener("DOMContentLoaded", function () {
         window.location.href = 'AccountHandling.html'; // Link zur Account-Seite
     });
 
-    // Funktion zum Hinzufügen eines neuen Regals
+    // Funktion zum Hinzufügen eines neuen Regals (mit API-Call)
     function addShelf(shelfName) {
+        // Neues Shelf-Objekt erstellen
+        const newShelf = {
+            name: shelfName,
+            books: [] // Leeres Bücherregal beim Erstellen
+        };
+
+        // API-Request (POST) um ein neues Regal hinzuzufügen
+        fetch("https://shelfspacebackend-happy-gecko-kb.apps.01.cf.eu01.stackit.cloud/api/shelves/newShelf", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(newShelf) // Das neue Regal in JSON umwandeln
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Fehler beim Hinzufügen des Regals");
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Erfolgreiches Hinzufügen, Regal in den DOM einfügen
+                appendShelfToDOM(shelfName);
+            })
+            .catch(error => {
+                alert(error.message); // Fehlermeldung anzeigen
+            });
+    }
+
+    // Funktion zum Regal im DOM hinzufügen
+    function appendShelfToDOM(shelfName) {
         // Neues Shelf-Element erstellen
         const newShelf = document.createElement('div');
         newShelf.classList.add('shelf');

@@ -31,7 +31,7 @@ public class UserController {
 
     @CrossOrigin(origins = "http://localhost:63342")
     @PostMapping("/login")
-    public boolean login(@RequestBody User user) {
+    public String login(@RequestBody User user) {
         return userService.login(user.getUsername(), user.getPassword());
     }
 

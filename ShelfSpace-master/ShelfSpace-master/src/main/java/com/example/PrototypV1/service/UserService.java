@@ -1,5 +1,6 @@
 package com.example.PrototypV1.service;
 
+import com.example.PrototypV1.manager.*;
 import com.example.PrototypV1.model.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import java.util.Properties;
 public class UserService {
     @Value("${user.properties.file}")
     private String userPropertiesFile;
+    private TokenManager tokenManager = new TokenManager();
 
     public void register(User user) {
         Properties properties = new Properties();
@@ -27,16 +29,20 @@ public class UserService {
         }
     }
 
-    public boolean login(String username, String password) {
+    public String login(String username, String password) {
         Properties properties = new Properties();
         try (InputStream input = new FileInputStream(userPropertiesFile)) {
             properties.load(input);
         } catch (IOException e) {
-            return false;
+            return "Fehler beim Laden der Login aufgetret";
         }
 
         String storedPassword = properties.getProperty(username);
-        return storedPassword != null && storedPassword.equals(password);
+        if (storedPassword != null && storedPassword.equals(password))
+        {
+            return tokenManager.generateTokenForUser(properties.getProperty(username));
+        }
+        return "Fehler beim Laden der Login aufgetret";
     }
     public boolean userExists(String username) {
         Properties properties = new Properties();
