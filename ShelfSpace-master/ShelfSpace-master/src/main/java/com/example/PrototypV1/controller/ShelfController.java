@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.*;
-
 @RestController
 @RequestMapping("/api/shelves")
 public class ShelfController {
@@ -32,9 +31,14 @@ public class ShelfController {
 
         // Überprüfen, ob das Token gültig ist
         String username = tokenManager.getUserForToken(token);
-        if (username != null) {
+        System.out.println("Empfangenes Token: " + token);
+        System.out.println("Gefundener Benutzer für Token: " + username);
+        if (username == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ungültiges Token");
         }
+        System.out.println("Empfangenes Token: " + token);
+        System.out.println("Gefundener Benutzer für Token: " + username);
+
 
         // Wenn das Token gültig ist, Regal erstellen
         shelfService.createShelf(shelf, username);

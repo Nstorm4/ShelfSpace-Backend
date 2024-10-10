@@ -13,22 +13,31 @@ import java.util.Properties;
 @Service
 public class ShelfService {
 
-//    @Value("${shelf.properties.file}")
-    private String shelfPropertiesFile = "shelf.properties";
+    @Value("${shelf.properties.file}")
+    private String shelfPropertiesFile;
 
     private final ObjectMapper objectMapper = new ObjectMapper(); // Jackson ObjectMapper
 
     public void createShelf(Shelf shelf, String username) throws IOException {
         Properties properties = new Properties();
-        try (InputStream input = new FileInputStream(shelfPropertiesFile)) {
-            properties.load(input);
+        System.out.println("I´m here mate\n" + shelfPropertiesFile);
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        try (InputStream input = loader.getResourceAsStream(shelfPropertiesFile)) {
+            if (input == null) {
+                System.out.println("Resource nicht gefunden: " + shelfPropertiesFile);
+            } else {
+                properties.load(input);
+                System.out.println("Properties geladen");
+            }
         } catch (IOException e) {
+            System.out.println("Fehler beim Laden der Datei: " + shelfPropertiesFile);
             e.printStackTrace();
         }
 
+
         // Convert books list to JSON
         String booksJson = convertBooksToJson(shelf.getBooks());
-
+        System.out.println("Bücherliste:\n" + booksJson);
         // Store shelf information using the username as key
         String shelfData = String.format("name:%s,books:%s", shelf.getName(), booksJson);
         properties.setProperty(username, shelfData);
@@ -36,6 +45,7 @@ public class ShelfService {
         // Save properties back to file
         try (OutputStream output = new FileOutputStream(shelfPropertiesFile)) {
             properties.store(output, null);
+            System.out.println("Properties saved to file");
         } catch (IOException e) {
             e.printStackTrace();
         }
