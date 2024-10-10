@@ -34,7 +34,7 @@ public class UserService {
         try (InputStream input = new FileInputStream(userPropertiesFile)) {
             properties.load(input);
         } catch (IOException e) {
-            return "Fehler beim Laden der Login aufgetret";
+            return null;
         }
 
         String storedPassword = properties.getProperty(username);
@@ -42,7 +42,7 @@ public class UserService {
         {
             return tokenManager.generateTokenForUser(properties.getProperty(username));
         }
-        return "Fehler beim Laden der Login aufgetret";
+        return null;
     }
     public boolean userExists(String username) {
         Properties properties = new Properties();

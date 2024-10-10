@@ -33,6 +33,10 @@ public class TokenManager {
         return userTokens.get(username);
     }
 
+    public String getUserForToken(String token) {
+        return userTokens.get(token);
+    }
+
     // Methode, um zu prüfen, ob ein Token existiert
     public boolean isTokenValid(String username, String token) {
         return token.equals(userTokens.get(username));

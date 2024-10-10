@@ -40,11 +40,20 @@ document.addEventListener("DOMContentLoaded", function () {
             books: [] // Leeres Bücherregal beim Erstellen
         };
 
-        // API-Request (POST) um ein neues Regal hinzuzufügen
+        // Abrufen des Tokens aus dem localStorage
+        const token = localStorage.getItem('authToken');
+
+        if (!token) {
+            alert('Sie müssen sich einloggen, um ein Regal hinzuzufügen.');
+            return;
+        }
+
+        // API-Request (POST) um ein neues Regal hinzuzufügen, Token wird im Header mitgesendet
         fetch("https://shelfspacebackend-happy-gecko-kb.apps.01.cf.eu01.stackit.cloud/api/shelves/newShelf", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`  // Token im Authorization Header
             },
             body: JSON.stringify(newShelf) // Das neue Regal in JSON umwandeln
         })

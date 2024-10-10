@@ -13,12 +13,12 @@ import java.util.Properties;
 @Service
 public class ShelfService {
 
-    @Value("${shelf.properties.file}")
-    private String shelfPropertiesFile;
+//    @Value("${shelf.properties.file}")
+    private String shelfPropertiesFile = "shelf.properties";
 
     private final ObjectMapper objectMapper = new ObjectMapper(); // Jackson ObjectMapper
 
-    public void createShelf(Shelf shelf) {
+    public void createShelf(Shelf shelf, String username) throws IOException {
         Properties properties = new Properties();
         try (InputStream input = new FileInputStream(shelfPropertiesFile)) {
             properties.load(input);
@@ -31,7 +31,7 @@ public class ShelfService {
 
         // Store shelf information using the username as key
         String shelfData = String.format("name:%s,books:%s", shelf.getName(), booksJson);
-        properties.setProperty(shelf.getUser().getUsername(), shelfData);
+        properties.setProperty(username, shelfData);
 
         // Save properties back to file
         try (OutputStream output = new FileOutputStream(shelfPropertiesFile)) {
