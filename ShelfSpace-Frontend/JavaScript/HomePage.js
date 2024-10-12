@@ -32,6 +32,63 @@ document.addEventListener("DOMContentLoaded", function () {
         window.location.href = 'AccountHandling.html'; // Link zur Account-Seite
     });
 
+    // Regale beim Laden der Seite abrufen
+    loadShelves();
+
+    function loadShelves() {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            alert('Sie müssen sich einloggen, um die Regale anzuzeigen.');
+            return;
+        }
+
+        fetch("https://shelfspacebackend-happy-gecko-kb.apps.01.cf.eu01.stackit.cloud/api/shelves/userShelves", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Fehler beim Laden der Regale");
+                }
+                return response.json();
+            })
+            .then(shelves => {
+                // Alle Regale nacheinander hinzufügen
+                shelves.forEach(shelf => {
+                    appendShelfToDOM(shelf);
+                });
+            })
+            .catch(error => {
+                alert(error.message); // Fehlermeldung anzeigen
+            });
+    }
+
+    // Funktion zum Darstellen eines Regals im DOM, inklusive der Bücher
+    function appendShelfToDOM(shelf) {
+        // Neues Shelf-Element erstellen
+        const newShelf = document.createElement('div');
+        newShelf.classList.add('shelf');
+
+        // Bücher-HTML vorbereiten, falls vorhanden
+        const booksHTML = shelf.books.length > 0
+            ? shelf.books.map(book => `<div class="book">${book.title} von ${book.author}</div>`).join('')
+            : '<div class="book">+ Add book</div>';
+
+        // HTML-Struktur für das neue Regal, inklusive Bücher
+        newShelf.innerHTML = `
+        <h3>${shelf.name}</h3>
+        <div class="bookshelf">
+            ${booksHTML}  <!-- Bücher in das Regal einfügen -->
+        </div>
+        `;
+
+        // Neues Regal in den DOM einfügen
+        const shelvesContainer = document.getElementById('shelves');
+        shelvesContainer.appendChild(newShelf);
+    }
+
     // Funktion zum Hinzufügen eines neuen Regals (mit API-Call)
     function addShelf(shelfName) {
         // Neues Shelf-Objekt erstellen
@@ -59,35 +116,17 @@ document.addEventListener("DOMContentLoaded", function () {
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error("Fehler beim Hinzufügen des Regals");
+                    throw new Error("Fehler beim Hinzufügen des Regals: " + response.statusText);
                 }
-                return response.json();
+                return response.json(); // JSON-Antwort zurückgeben
             })
             .then(data => {
                 // Erfolgreiches Hinzufügen, Regal in den DOM einfügen
-                appendShelfToDOM(shelfName);
+                appendShelfToDOM(newShelf); // Hier das ursprüngliche newShelf Objekt verwenden
+                alert("Regal erfolgreich hinzugefügt!");
             })
             .catch(error => {
                 alert(error.message); // Fehlermeldung anzeigen
             });
-    }
-
-    // Funktion zum Regal im DOM hinzufügen
-    function appendShelfToDOM(shelfName) {
-        // Neues Shelf-Element erstellen
-        const newShelf = document.createElement('div');
-        newShelf.classList.add('shelf');
-
-        // HTML-Struktur für das neue Regal
-        newShelf.innerHTML = `
-            <h3>${shelfName}</h3>
-            <div class="bookshelf">
-                <div class="book">+ Add book</div>
-            </div>
-        `;
-
-        // Neues Regal in den DOM einfügen
-        const shelvesContainer = document.getElementById('shelves');
-        shelvesContainer.appendChild(newShelf);
     }
 });

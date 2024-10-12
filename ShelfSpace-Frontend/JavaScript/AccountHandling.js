@@ -25,7 +25,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
         .then(token => {
             if (token) {
                 console.log("Login erfolgreich");
-console.log(token);
+                console.log(token);
                 // Speichere das Token im Local Storage (oder Session Storage)
                 localStorage.setItem('authToken', token);
 
