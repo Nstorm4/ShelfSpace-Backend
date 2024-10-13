@@ -3,9 +3,8 @@ package com.example.PrototypV1.model;
 public class Book {
     private String title;
     private String author;
-    private String coverUrl; // URL zum Buchcover
+    private String coverUrl;
 
-    // Konstruktoren
     public Book() {}
 
     public Book(String title, String author, String coverUrl) {
@@ -14,7 +13,6 @@ public class Book {
         this.coverUrl = coverUrl;
     }
 
-    // Getter und Setter für Titel
     public String getTitle() {
         return title;
     }
@@ -23,7 +21,6 @@ public class Book {
         this.title = title;
     }
 
-    // Getter und Setter für Autor
     public String getAuthor() {
         return author;
     }
@@ -32,7 +29,6 @@ public class Book {
         this.author = author;
     }
 
-    // Getter und Setter für Cover-URL
     public String getCoverUrl() {
         return coverUrl;
     }

@@ -1,11 +1,9 @@
 package com.example.PrototypV1.model;
 
-// User.java
 public class User {
     private String username;
-    private String password; // Achte darauf, Passwörter zu hashen!
+    private String password;
 
-    // Getter und Setter
     public String getUsername() {
         return username;
     }

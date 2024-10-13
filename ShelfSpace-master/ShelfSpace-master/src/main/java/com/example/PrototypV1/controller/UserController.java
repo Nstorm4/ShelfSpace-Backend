@@ -5,7 +5,6 @@ import com.example.PrototypV1.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.io.IOException;
 
 @RestController
@@ -23,7 +22,6 @@ public class UserController {
         if (userService.userExists(user.getUsername())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Benutzername existiert bereits");
         }
-
         // Benutzer registrieren
         userService.register(user);
         return ResponseEntity.ok("Registrierung erfolgreich");
@@ -49,6 +47,4 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Ungültiger Token");
     }
-
 }
-

@@ -18,7 +18,6 @@ public class ShelfService {
 
     @Value("${shelf.properties.file}")
     private String shelfPropertiesFile;
-
     private final ObjectMapper objectMapper = new ObjectMapper(); // Jackson ObjectMapper
 
     /**
@@ -26,7 +25,6 @@ public class ShelfService {
      */
     public void createShelf(Shelf shelf, String username) throws IOException {
         Properties properties = new Properties();
-        System.out.println("I´m here mate\n" + shelfPropertiesFile);
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         try (InputStream input = loader.getResourceAsStream(shelfPropertiesFile)) {
             if (input == null) {
@@ -59,7 +57,6 @@ public class ShelfService {
         // Speichern in die Datei
         try (OutputStream output = new FileOutputStream(shelfPropertiesFile)) {
             properties.store(output, null);
-            System.out.println("Regale erfolgreich gespeichert.");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -96,7 +93,6 @@ public class ShelfService {
     /**
      * Konvertiert eine Liste von Book-Objekten in einen JSON-String.
      */
-    // Beispiel beim Konvertieren eines Buches zu JSON
     private String convertBooksToJson(List<Book> books) {
         try {
             return objectMapper.writeValueAsString(books);
@@ -106,7 +102,6 @@ public class ShelfService {
         }
     }
 
-    // Beispiel beim Lesen aus JSON
     private List<Book> convertJsonToBooks(String booksJson) {
         try {
             // JSON-String zurück in Liste von Book-Objekten konvertieren, die eine coverUrl enthalten
@@ -116,7 +111,6 @@ public class ShelfService {
             return new ArrayList<>(); // Leere Liste im Fehlerfall
         }
     }
-
 
     public void addBookToShelf(String username, String shelfName, Book book) throws IOException {
         Properties properties = new Properties();

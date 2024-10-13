@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Shelf {
     private String name;
-    private List<Book> books; // Liste von Büchern im Regal
+    private List<Book> books;
 
     public Shelf() {}
 

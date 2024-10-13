@@ -1,6 +1,5 @@
 package com.example.PrototypV1.controller;
 
-import com.example.PrototypV1.model.*;
 import com.example.PrototypV1.service.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +16,6 @@ public class BookController {
     public String searchBooks(@RequestParam String title) {
         try {
             String books = bookService.searchBooksByTitle(title);
-
-//            // Extrahiere Titel, Autoren und Thumbnails
-//            List<BookDTO> bookDTOs = books.stream()
-//                    .map(book -> new BookDTO(book.getTitle(), book.getAuthors(), book.getThumbnail()))
-//                    .collect(Collectors.toList());
-//
             return books;
         } catch (JsonProcessingException e) {
             e.printStackTrace();
