@@ -26,6 +26,7 @@ public class TokenManager {
         String token = generateRandomToken();
         System.out.println("Generierter Token: " + token + " für Benutzer: " + username);
         saveTokensToProperties(username, token); // Speichere die Tokens nach der Erstellung
+
         return token;
     }
 
@@ -69,7 +70,7 @@ public class TokenManager {
             properties.load(input);
         } catch (IOException e) {
         }
-
+System.out.println("saveTokensToProperties:\n" + username);
         properties.setProperty(token, username);
 
         try (OutputStream output = new FileOutputStream(propertiesFilePath)) {

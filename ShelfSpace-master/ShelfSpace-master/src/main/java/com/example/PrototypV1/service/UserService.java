@@ -40,7 +40,7 @@ public class UserService {
         String storedPassword = properties.getProperty(username);
         if (storedPassword != null && storedPassword.equals(password))
         {
-            return tokenManager.generateTokenForUser(properties.getProperty(username));
+            return tokenManager.generateTokenForUser(username);
         }
         return null;
     }

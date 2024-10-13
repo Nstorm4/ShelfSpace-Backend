@@ -63,6 +63,7 @@ public class ShelfController {
 
         // Überprüfen, ob das Token gültig ist
         String username = tokenManager.getUserForToken(token);
+        System.out.println("I found this user\n" + username);
         if (username == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ungültiges Token");
         }
