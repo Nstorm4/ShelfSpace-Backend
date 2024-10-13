@@ -1,37 +1,20 @@
 package com.example.PrototypV1.model;
 
-import java.util.List;
-
 public class Book {
-    private String id;
-    private String thumbnailUrl;
     private String title;
-    private List<String> authors; // Liste von Autoren
+    private String author;
+    private String coverUrl; // URL zum Buchcover
 
-    // Constructor, Getter und Setter
-    public Book(String id, String thumbnailUrl, String title, List<String> authors) {
-        this.id = id;
-        this.thumbnailUrl = thumbnailUrl;
+    // Konstruktoren
+    public Book() {}
+
+    public Book(String title, String author, String coverUrl) {
         this.title = title;
-        this.authors = authors;
+        this.author = author;
+        this.coverUrl = coverUrl;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getThumbnailUrl() {
-        return thumbnailUrl;
-    }
-
-    public void setThumbnailUrl(String thumbnailUrl) {
-        this.thumbnailUrl = thumbnailUrl;
-    }
-
+    // Getter und Setter für Titel
     public String getTitle() {
         return title;
     }
@@ -40,11 +23,21 @@ public class Book {
         this.title = title;
     }
 
-    public List<String> getAuthors() {
-        return authors;
+    // Getter und Setter für Autor
+    public String getAuthor() {
+        return author;
     }
 
-    public void setAuthors(List<String> authors) {
-        this.authors = authors;
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    // Getter und Setter für Cover-URL
+    public String getCoverUrl() {
+        return coverUrl;
+    }
+
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
     }
 }
