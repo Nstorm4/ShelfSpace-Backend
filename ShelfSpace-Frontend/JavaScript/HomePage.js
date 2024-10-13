@@ -28,13 +28,13 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     document.getElementById('backToAccountButton').addEventListener('click', function() {
-        // Hier wird der Logout-Prozess gestartet
         logout();
     });
 
     // Regale beim Laden der Seite abrufen
     loadShelves();
 
+    // Funktion, um die Regale des Benutzers abzurufen und auf der Seite darzustellen
     function loadShelves() {
         const token = localStorage.getItem('authToken');
         if (!token) {
@@ -64,25 +64,28 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     }
 
+    // Funktion zum Hinzufügen eines neuen Regals ins DOM
     function appendShelfToDOM(shelf) {
         const newShelf = document.createElement('div');
         newShelf.classList.add('shelf');
 
         const booksHTML = shelf.books.length > 0
-            ? shelf.books.map(book => `<div class="book">${book.title} von ${book.author}</div>`).join('')
-            : '<div class="book">+ Add book</div>';
+            ? shelf.books.map(book => `<div class="book"><img src="${book.coverUrl}" alt="Buchcover"><p>${book.title}</p><p>${book.author}</p></div>`).join('')
+            : ''; // Entfernen des "(add a book)" Textes
 
         newShelf.innerHTML = `
-        <h3>${shelf.name}</h3>
-        <div class="bookshelf">
-            ${booksHTML}
-        </div>
+            <h3>${shelf.name}</h3>
+            <div class="bookshelf">
+                ${booksHTML}
+                <div class="add-book-button" onclick="addBookToShelf('${shelf.name}')">+ Add book</div>
+            </div>
         `;
 
         const shelvesContainer = document.getElementById('shelves');
         shelvesContainer.appendChild(newShelf);
     }
 
+    // Funktion, um ein neues Regal hinzuzufügen
     function addShelf(shelfName) {
         const newShelf = {
             name: shelfName,
@@ -119,6 +122,81 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     }
 
+    // Funktion zum Hinzufügen eines neuen Buches ins Regal
+    window.addBookToShelf = function(shelfName) {
+        const title = prompt("Bitte geben Sie den Titel des Buches ein:");
+        if (!title) {
+            alert("Titel ist erforderlich!");
+            return;
+        }
+
+        const author = prompt("Bitte geben Sie den Autor des Buches ein:");
+        if (!author) {
+            alert("Autor ist erforderlich!");
+            return;
+        }
+
+        const coverUrl = prompt("Bitte geben Sie die URL für das Buchcover ein:");
+        if (!coverUrl) {
+            alert("Cover-URL ist erforderlich!");
+            return;
+        }
+
+        const newBook = { title, author, coverUrl };
+
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            alert('Sie müssen sich einloggen, um ein Buch hinzuzufügen.');
+            return;
+        }
+
+        fetch(`https://shelfspacebackend-happy-gecko-kb.apps.01.cf.eu01.stackit.cloud/api/shelves/addBook`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ shelfName, book: newBook })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Fehler beim Hinzufügen des Buches: " + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                appendBookToShelf(data.book, shelfName);
+                alert("Buch erfolgreich hinzugefügt!");
+            })
+            .catch(error => {
+                alert(error.message);
+            });
+    };
+
+    // Funktion zum Hinzufügen eines Buches ins DOM
+    function appendBookToShelf(book, shelfName) {
+        const shelves = document.querySelectorAll('.shelf'); // Alle Regale abrufen
+
+        // Durch alle Regale iterieren, um das richtige Regal zu finden
+        shelves.forEach(shelf => {
+            const shelfTitle = shelf.querySelector('h3').textContent;
+            if (shelfTitle === shelfName) {
+                const bookDiv = document.createElement('div');
+                bookDiv.classList.add('book');
+
+                // Buch wird jetzt mit Cover, Titel und Autor angezeigt
+                bookDiv.innerHTML = `
+                    <img src="${book.coverUrl}" alt="Buchcover">
+                    <p>${book.title}</p>
+                    <p>${book.author}</p>
+                `;
+
+                const bookshelf = shelf.querySelector('.bookshelf');
+                bookshelf.appendChild(bookDiv);
+            }
+        });
+    }
+
     // Funktion zum Ausloggen
     function logout() {
         const token = localStorage.getItem('authToken');
@@ -128,16 +206,14 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // API-Request zum Logout
         fetch("https://shelfspacebackend-happy-gecko-kb.apps.01.cf.eu01.stackit.cloud/api/users/logout", {
             method: "POST",
             headers: {
-                "Authorization": `Bearer ${token}` // Sende das Token im Header
+                "Authorization": `Bearer ${token}`
             }
         })
             .then(response => {
                 if (response.ok) {
-                    // Erfolgreich ausgeloggt, Token entfernen und zur Login-Seite weiterleiten
                     localStorage.removeItem('authToken');
                     window.location.href = 'AccountHandling.html';
                 } else {

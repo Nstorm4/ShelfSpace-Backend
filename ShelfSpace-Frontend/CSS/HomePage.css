@@ -123,6 +123,37 @@ body {
 }
 
 .book {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #333;
+    color: #ffffff;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+    width: 120px;
+    cursor: pointer;
+}
+
+.book img {
+    width: 100px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.book p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+
+.book:hover {
+    background-color: #444;
+}
+
+/* Anpassung des Add-Book-Buttons */
+.add-book-button {
     background-color: #333;
     color: #ffffff;
     border-radius: 5px;
@@ -130,8 +161,13 @@ body {
     text-align: center;
     width: 100px;
     cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.book:hover {
+.add-book-button:hover {
     background-color: #444;
 }
