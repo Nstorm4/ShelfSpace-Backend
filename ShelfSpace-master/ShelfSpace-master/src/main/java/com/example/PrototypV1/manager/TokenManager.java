@@ -79,4 +79,26 @@ System.out.println("saveTokensToProperties:\n" + username);
             e.printStackTrace();
         }
     }
+    public void removeToken(String token) {
+        Properties properties = new Properties();
+        try (InputStream input = new FileInputStream(propertiesFilePath)) {
+            properties.load(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        // Entferne den Token, falls er existiert
+        if (properties.containsKey(token)) {
+            properties.remove(token);
+
+            // Speichere die aktualisierte Datei
+            try (OutputStream output = new FileOutputStream(propertiesFilePath)) {
+                properties.store(output, null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

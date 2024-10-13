@@ -78,4 +78,8 @@ public class UserService {
             // Rückgabe des gesamten Inhalts als String
             return result.toString();
         }
+    public void logout(String token) {
+        tokenManager.removeToken(token);
     }
+
+}

@@ -40,5 +40,15 @@ public class UserController {
     public String getAllUsers() throws IOException {
         return userService.getAllUsers();
     }
+    @CrossOrigin(origins = "http://localhost:63342")
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
+        if (token != null && !token.isEmpty()) {
+            userService.logout(token);
+            return ResponseEntity.ok("Logout erfolgreich");
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Ungültiger Token");
+    }
 
 }
+
