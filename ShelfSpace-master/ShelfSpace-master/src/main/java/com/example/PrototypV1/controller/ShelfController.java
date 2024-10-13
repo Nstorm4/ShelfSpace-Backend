@@ -1,6 +1,7 @@
 package com.example.PrototypV1.controller;
 
 import com.example.PrototypV1.manager.TokenManager;
+import com.example.PrototypV1.model.Book;
 import com.example.PrototypV1.model.Shelf;
 import com.example.PrototypV1.service.ShelfService;
 import org.springframework.http.HttpHeaders;
@@ -71,6 +72,32 @@ public class ShelfController {
         // Regale für den Benutzer abrufen
         List<Shelf> shelves = shelfService.getShelvesByUsername(username);
         return ResponseEntity.ok(shelves);
+    }
+    @CrossOrigin(origins = "http://localhost:63342")
+    @PostMapping("/addBook")
+    public ResponseEntity<?> addBookToShelf(@RequestBody Map<String, Object> payload, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws IOException {
+        String shelfName = (String) payload.get("shelfName");
+        Map<String, String> bookData = (Map<String, String>) payload.get("book");
+
+        // Validieren und Token verarbeiten
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7); // Entfernt "Bearer "
+        }
+        String username = tokenManager.getUserForToken(token);
+        if (username == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ungültiges Token");
+        }
+
+        // Neues Buch mit Titel, Autor und Cover-URL
+        Book newBook = new Book();
+        newBook.setTitle(bookData.get("title"));
+        newBook.setAuthor(bookData.get("author"));
+        newBook.setCoverUrl(bookData.get("coverUrl"));
+
+        // Das Buch dem Regal hinzufügen
+        shelfService.addBookToShelf(username, shelfName, newBook);
+
+        return ResponseEntity.ok(Map.of("message", "Buch erfolgreich hinzugefügt", "book", newBook));
     }
 
 }

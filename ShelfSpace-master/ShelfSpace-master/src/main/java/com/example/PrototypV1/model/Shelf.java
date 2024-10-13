@@ -4,19 +4,15 @@ import java.util.List;
 
 public class Shelf {
     private String name;
-    private List<Book> books;
+    private List<Book> books; // Liste von Büchern im Regal
 
-    // Standard-Konstruktor
-    public Shelf() {
-    }
+    public Shelf() {}
 
-    // Konstruktor mit Parametern (falls benötigt)
     public Shelf(String name, List<Book> books) {
         this.name = name;
         this.books = books;
     }
 
-    // Getter und Setter
     public String getName() {
         return name;
     }
