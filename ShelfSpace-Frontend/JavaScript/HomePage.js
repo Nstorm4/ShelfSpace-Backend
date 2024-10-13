@@ -17,7 +17,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Button-Verlinkungen
     document.getElementById("addShelfButton").addEventListener("click", function () {
-        // Eingabefenster für den Regalnamen
         const shelfName = prompt("Bitte geben Sie den Namen des neuen Regals ein:");
         if (shelfName) {
             addShelf(shelfName);
@@ -29,7 +28,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     document.getElementById('backToAccountButton').addEventListener('click', function() {
-        window.location.href = 'AccountHandling.html'; // Link zur Account-Seite
+        // Hier wird der Logout-Prozess gestartet
+        logout();
     });
 
     // Regale beim Laden der Seite abrufen
@@ -55,49 +55,40 @@ document.addEventListener("DOMContentLoaded", function () {
                 return response.json();
             })
             .then(shelves => {
-                // Alle Regale nacheinander hinzufügen
                 shelves.forEach(shelf => {
                     appendShelfToDOM(shelf);
                 });
             })
             .catch(error => {
-                alert(error.message); // Fehlermeldung anzeigen
+                alert(error.message);
             });
     }
 
-    // Funktion zum Darstellen eines Regals im DOM, inklusive der Bücher
     function appendShelfToDOM(shelf) {
-        // Neues Shelf-Element erstellen
         const newShelf = document.createElement('div');
         newShelf.classList.add('shelf');
 
-        // Bücher-HTML vorbereiten, falls vorhanden
         const booksHTML = shelf.books.length > 0
             ? shelf.books.map(book => `<div class="book">${book.title} von ${book.author}</div>`).join('')
             : '<div class="book">+ Add book</div>';
 
-        // HTML-Struktur für das neue Regal, inklusive Bücher
         newShelf.innerHTML = `
         <h3>${shelf.name}</h3>
         <div class="bookshelf">
-            ${booksHTML}  <!-- Bücher in das Regal einfügen -->
+            ${booksHTML}
         </div>
         `;
 
-        // Neues Regal in den DOM einfügen
         const shelvesContainer = document.getElementById('shelves');
         shelvesContainer.appendChild(newShelf);
     }
 
-    // Funktion zum Hinzufügen eines neuen Regals (mit API-Call)
     function addShelf(shelfName) {
-        // Neues Shelf-Objekt erstellen
         const newShelf = {
             name: shelfName,
-            books: [] // Leeres Bücherregal beim Erstellen
+            books: []
         };
 
-        // Abrufen des Tokens aus dem localStorage
         const token = localStorage.getItem('authToken');
 
         if (!token) {
@@ -105,28 +96,56 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        // API-Request (POST) um ein neues Regal hinzuzufügen, Token wird im Header mitgesendet
         fetch("https://shelfspacebackend-happy-gecko-kb.apps.01.cf.eu01.stackit.cloud/api/shelves/newShelf", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`  // Token im Authorization Header
+                "Authorization": `Bearer ${token}`
             },
-            body: JSON.stringify(newShelf) // Das neue Regal in JSON umwandeln
+            body: JSON.stringify(newShelf)
         })
             .then(response => {
                 if (!response.ok) {
                     throw new Error("Fehler beim Hinzufügen des Regals: " + response.statusText);
                 }
-                return response.json(); // JSON-Antwort zurückgeben
+                return response.json();
             })
             .then(data => {
-                // Erfolgreiches Hinzufügen, Regal in den DOM einfügen
-                appendShelfToDOM(newShelf); // Hier das ursprüngliche newShelf Objekt verwenden
+                appendShelfToDOM(newShelf);
                 alert("Regal erfolgreich hinzugefügt!");
             })
             .catch(error => {
-                alert(error.message); // Fehlermeldung anzeigen
+                alert(error.message);
+            });
+    }
+
+    // Funktion zum Ausloggen
+    function logout() {
+        const token = localStorage.getItem('authToken');
+
+        if (!token) {
+            alert("Kein gültiges Token gefunden.");
+            return;
+        }
+
+        // API-Request zum Logout
+        fetch("https://shelfspacebackend-happy-gecko-kb.apps.01.cf.eu01.stackit.cloud/api/users/logout", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${token}` // Sende das Token im Header
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    // Erfolgreich ausgeloggt, Token entfernen und zur Login-Seite weiterleiten
+                    localStorage.removeItem('authToken');
+                    window.location.href = 'AccountHandling.html';
+                } else {
+                    throw new Error("Fehler beim Ausloggen: " + response.statusText);
+                }
+            })
+            .catch(error => {
+                alert(error.message);
             });
     }
 });
