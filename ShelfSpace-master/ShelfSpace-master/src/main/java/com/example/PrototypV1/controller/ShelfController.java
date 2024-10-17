@@ -129,19 +129,27 @@ public class ShelfController {
         }
         String username = tokenManager.getUserForToken(token);
         if (username == null) {
+            System.err.println("Ungültiges Token für Benutzer");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ungültiges Token");
         }
 
-        // Neues Buch mit Titel, Autor und Cover-URL
+        // Neues Buch mit Titel, Autor und Cover-URL erstellen
         Book newBook = new Book();
         newBook.setTitle(bookData.get("title"));
         newBook.setAuthor(bookData.get("author"));
         newBook.setCoverUrl(bookData.get("coverUrl"));
 
-        // Das Buch dem Regal hinzufügen
-        shelfService.removeBookFromShelf(username, shelfName, newBook);
-        return ResponseEntity.ok(Map.of("message", "Buch erfolgreich gelöscht", "book", newBook));
+        try {
+            // Das Buch aus dem Regal entfernen
+            shelfService.removeBookFromShelf(username, shelfName, newBook);
+            return ResponseEntity.ok(Map.of("message", "Buch erfolgreich gelöscht", "book", newBook));
+        } catch (RuntimeException e) {
+            // Log für den Fehlerfall
+            System.err.println("Fehler beim Löschen des Buches: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fehler beim Löschen des Buches: " + e.getMessage());
+        }
     }
+
 
     @CrossOrigin(origins = "http://localhost:63342")
     @GetMapping("/getAllShelves")

@@ -240,8 +240,7 @@ public class ShelfService {
         // Rückgabe des gesamten Inhalts als String
         return result.toString();
     }
-
-    public void removeBookFromShelf(String username, String shelfName, Book newBook) {
+    public void removeBookFromShelf(String username, String shelfName, Book bookToRemove) {
         Properties properties = new Properties();
 
         // Laden der Properties-Datei
@@ -253,26 +252,44 @@ public class ShelfService {
             if (shelfData != null && !shelfData.isEmpty()) {
                 List<Shelf> shelves = objectMapper.readValue(shelfData, new TypeReference<List<Shelf>>() {});
 
-                // Regal finden und Buch hinzufügen
+                boolean bookRemoved = false; // Flag zur Überprüfung, ob das Buch entfernt wurde
+
+                // Regal finden und Buch entfernen
                 for (Shelf shelf : shelves) {
                     if (shelf.getName().equals(shelfName)) {
-                        shelf.getBooks().remove(newBook);
-                        break;
+                        // Vor dem Entfernen prüfen, ob das Buch existiert
+                        bookRemoved = shelf.getBooks().removeIf(book ->
+                                book.getTitle().equals(bookToRemove.getTitle()) &&
+                                        book.getAuthor().equals(bookToRemove.getAuthor()) &&
+                                        book.getCoverUrl().equals(bookToRemove.getCoverUrl())
+                        );
+                        if (bookRemoved) {
+                            break; // Buch wurde gefunden und entfernt, Schleife abbrechen
+                        }
                     }
                 }
 
-                // Aktualisiertes Regal speichern
-                String updatedShelvesJson = objectMapper.writeValueAsString(shelves);
-                properties.setProperty(username, updatedShelvesJson);
+                // Wenn das Buch entfernt wurde, speichere die Änderungen
+                if (bookRemoved) {
+                    String updatedShelvesJson = objectMapper.writeValueAsString(shelves);
+                    properties.setProperty(username, updatedShelvesJson);
 
-                try (OutputStream output = new FileOutputStream(shelfPropertiesFile)) {
-                    properties.store(output, null);
+                    try (OutputStream output = new FileOutputStream(shelfPropertiesFile)) {
+                        properties.store(output, null);
+                    }
+                } else {
+                    // Log-Ausgabe, wenn das Buch nicht gefunden wurde
+                    System.err.println("Buch nicht gefunden im Regal: " + shelfName);
+                    throw new RuntimeException("Buch konnte nicht gefunden oder entfernt werden");
                 }
             }
         } catch (FileNotFoundException e) {
+            System.err.println("Properties-Datei nicht gefunden: " + e.getMessage());
             throw new RuntimeException(e);
         } catch (IOException e) {
+            System.err.println("Fehler beim Lesen/Schreiben der Properties-Datei: " + e.getMessage());
             throw new RuntimeException(e);
         }
     }
+
 }
