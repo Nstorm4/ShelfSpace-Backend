@@ -49,6 +49,30 @@ public class ShelfController {
     }
 
     @CrossOrigin(origins = "http://localhost:63342")
+    @DeleteMapping("/deleteShelf")
+    public ResponseEntity<?> deleteShelf(@RequestBody Shelf shelf, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws IOException {
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7); // Entfernt "Bearer "
+        }
+
+        // Überprüfen, ob das Token gültig ist
+        String username = tokenManager.getUserForToken(token);
+
+        if (username == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ungültiges Token");
+        }
+
+        // Wenn das Token gültig ist, Regal erstellen
+        shelfService.deleteShelf(shelf, username);
+
+        // Rückgabe eines strukturierten JSON-Objekts
+        return ResponseEntity.ok(Map.of(
+                "message", "Regal erfolgreich gelöscht",
+                "shelfName", shelf.getName() // Regalname zurückgeben
+        ));
+    }
+
+    @CrossOrigin(origins = "http://localhost:63342")
     @GetMapping("/userShelves")
     public ResponseEntity<?> getUserShelves(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         // Token Format: "Bearer <token>", wir müssen "Bearer " entfernen, um nur das Token zu bekommen

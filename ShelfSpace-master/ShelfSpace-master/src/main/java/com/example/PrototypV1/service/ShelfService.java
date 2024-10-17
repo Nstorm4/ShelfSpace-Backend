@@ -142,4 +142,61 @@ public class ShelfService {
             }
         }
     }
+
+    public void deleteShelf(Shelf shelf, String username) {
+        Properties properties = new Properties();
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+
+        // Properties-Datei laden
+        try (InputStream input = loader.getResourceAsStream(shelfPropertiesFile)) {
+            if (input == null) {
+                System.out.println("Resource nicht gefunden: " + shelfPropertiesFile);
+            } else {
+                properties.load(input);
+                System.out.println("Properties geladen");
+            }
+        } catch (IOException e) {
+            System.out.println("Fehler beim Laden der Datei: " + shelfPropertiesFile);
+            e.printStackTrace();
+        }
+
+        // Überprüfen, ob der Benutzer schon Regale hat
+        String existingShelvesJson = properties.getProperty(username);
+        List<Shelf> shelves = new ArrayList<>();
+
+        // Wenn bereits Regale existieren, lade sie in die Liste
+        if (existingShelvesJson != null && !existingShelvesJson.trim().isEmpty()) {
+            try {
+                shelves = objectMapper.readValue(existingShelvesJson, new TypeReference<List<Shelf>>() {});
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Versuche das Regal aus der Liste zu entfernen
+        boolean removed = shelves.remove(shelf);
+        if (removed) {
+            System.out.println("Regal erfolgreich entfernt");
+        } else {
+            System.out.println("Regal nicht gefunden");
+        }
+
+        // Speichere die aktualisierte Liste als JSON-Array
+        String updatedShelvesJson = null;
+        try {
+            updatedShelvesJson = objectMapper.writeValueAsString(shelves);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        properties.setProperty(username, updatedShelvesJson);
+
+        // Speichern in die Datei
+        try (OutputStream output = new FileOutputStream(shelfPropertiesFile)) {
+            properties.store(output, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
