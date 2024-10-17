@@ -146,11 +146,13 @@ public class ShelfService {
     public void deleteShelf(Shelf shelf, String username) {
         Properties properties = new Properties();
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        System.out.println("Versuche Regal mit Namen: " + shelf.getName() + " für Benutzer: " + username);
 
         // Properties-Datei laden
         try (InputStream input = loader.getResourceAsStream(shelfPropertiesFile)) {
             if (input == null) {
                 System.out.println("Resource nicht gefunden: " + shelfPropertiesFile);
+                return; // Frühzeitiger Rückkehr, wenn die Datei nicht gefunden wurde
             } else {
                 properties.load(input);
                 System.out.println("Properties geladen");
@@ -158,9 +160,10 @@ public class ShelfService {
         } catch (IOException e) {
             System.out.println("Fehler beim Laden der Datei: " + shelfPropertiesFile);
             e.printStackTrace();
+            return; // Frühzeitiger Rückkehr bei Fehler
         }
 
-        // Überprüfen, ob der Benutzer schon Regale hat
+        // Überprüfen, ob der Benutzer bereits Regale hat
         String existingShelvesJson = properties.getProperty(username);
         List<Shelf> shelves = new ArrayList<>();
 
@@ -170,15 +173,28 @@ public class ShelfService {
                 shelves = objectMapper.readValue(existingShelvesJson, new TypeReference<List<Shelf>>() {});
             } catch (IOException e) {
                 e.printStackTrace();
+                return; // Frühzeitiger Rückkehr bei Fehler
             }
         }
 
-        // Versuche das Regal aus der Liste zu entfernen
-        boolean removed = shelves.remove(shelf);
-        if (removed) {
-            System.out.println("Regal erfolgreich entfernt");
+        System.out.println("Liste der Regale des Benutzers " + username + ": " + shelves);
+
+        // Versuche das Regal anhand des Namens zu finden
+        Shelf shelfToRemove = null;
+        for (Shelf s : shelves) {
+            if (s.getName().equals(shelf.getName())) { // Vergleich anhand des Regalsnamens
+                shelfToRemove = s;
+                break;
+            }
+        }
+
+        // Regal entfernen, wenn gefunden
+        if (shelfToRemove != null) {
+            shelves.remove(shelfToRemove);
+            System.out.println("Regal '" + shelf.getName() + "' erfolgreich entfernt");
         } else {
-            System.out.println("Regal nicht gefunden");
+            System.out.println("Regal '" + shelf.getName() + "' nicht gefunden");
+            return; // Frühzeitiger Rückkehr, wenn Regal nicht gefunden wurde
         }
 
         // Speichere die aktualisierte Liste als JSON-Array
@@ -187,6 +203,7 @@ public class ShelfService {
             updatedShelvesJson = objectMapper.writeValueAsString(shelves);
         } catch (IOException e) {
             e.printStackTrace();
+            return; // Frühzeitiger Rückkehr bei Fehler
         }
 
         properties.setProperty(username, updatedShelvesJson);
@@ -198,5 +215,29 @@ public class ShelfService {
             e.printStackTrace();
         }
     }
+    public String getAllShelves() {
+        Properties properties = new Properties();
+        StringBuilder result = new StringBuilder();
 
+        // Versuche die Properties-Datei zu laden
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(shelfPropertiesFile)) {
+            if (inputStream == null) {
+                throw new IOException("Properties file not found: " + shelfPropertiesFile);
+            }
+
+            // Lade die Inhalte der Properties-Datei
+            properties.load(inputStream);
+
+            // Iteriere über alle Einträge und hänge sie an den result-String an
+            for (String key : properties.stringPropertyNames()) {
+                String value = properties.getProperty(key);
+                result.append(key).append("=").append(value).append("\n");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Rückgabe des gesamten Inhalts als String
+        return result.toString();
+    }
 }

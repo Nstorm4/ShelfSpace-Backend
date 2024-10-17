@@ -63,6 +63,7 @@ public class ShelfController {
         }
 
         // Wenn das Token gültig ist, Regal erstellen
+        System.out.println("Das ist das Regal wies im Backend ankommt:" + shelf.toString());
         shelfService.deleteShelf(shelf, username);
 
         // Rückgabe eines strukturierten JSON-Objekts
@@ -114,5 +115,11 @@ public class ShelfController {
         // Das Buch dem Regal hinzufügen
         shelfService.addBookToShelf(username, shelfName, newBook);
         return ResponseEntity.ok(Map.of("message", "Buch erfolgreich hinzugefügt", "book", newBook));
+    }
+
+    @CrossOrigin(origins = "http://localhost:63342")
+    @GetMapping("/getAllShelves")
+    public String getAllShelves() throws IOException {
+        return shelfService.getAllShelves();
     }
 }
