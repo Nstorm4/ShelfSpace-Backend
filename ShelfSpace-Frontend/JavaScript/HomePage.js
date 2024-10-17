@@ -144,8 +144,11 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        const newBook = { title, author, coverUrl };
+        const newBook = {title, author, coverUrl};
+        addBook(shelfName, newBook)
+    }
 
+    function addBook(shelfName, newBook) {
         const token = localStorage.getItem('authToken');
         if (!token) {
             alert('Sie müssen sich einloggen, um ein Buch hinzuzufügen.');
@@ -174,6 +177,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 alert(error.message);
             });
     };
+
 
     // Funktion zum Hinzufügen eines Buches ins DOM
     function appendBookToShelf(book, shelfName) {

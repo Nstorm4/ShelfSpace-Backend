@@ -57,19 +57,36 @@ document.getElementById('searchButton').addEventListener('click', function () {
 
                     const textNode = document.createTextNode(text);
 
-                    // Plus-Button
+                    // Inside your fetch promise chain, where you create the addButton:
                     const addButton = document.createElement('button');
                     addButton.textContent = '+ add to shelf';
                     addButton.classList.add('add-button');
 
-                    // Füge einen Event-Listener für den Plus-Button hinzu
+// Füge einen Event-Listener für den Plus-Button hinzu
                     addButton.addEventListener('click', (event) => {
                         event.stopPropagation(); // Verhindere, dass der Listeneintrag-Click das Modal öffnet
-                        alert(`${book.title} wurde hinzugefügt!`);
 
-                        // TODO:
-                        // Weitere Logik zum Hinzufügen des Buchs zu einem Regal kann hier implementiert werden
+                        // Prompt the user for the shelf name
+                        const shelfName = prompt('Bitte geben Sie den Namen des Regals ein:');
+
+                        if (shelfName) { // Ensure a shelf name was entered
+                            // Create the new book object
+                            const newBook = {
+                                title: book.title,
+                                author: book.authors ? book.authors.join(', ') : 'Unbekannt',
+                                coverUrl: (book.imageLinks && book.imageLinks.thumbnail) || 'https://via.placeholder.com/50'
+                            };
+
+                            // Call the addBook method
+                            addBook(shelfName, newBook);
+
+                            alert(`${book.title} wurde zum Regal "${shelfName}" hinzugefügt!`);
+                        } else {
+                            alert('Regalname darf nicht leer sein!'); // Optional: Handle case for empty shelf name
+                        }
                     });
+
+
 
                     //Elemente hinzufügen
                     li.appendChild(img);
@@ -134,6 +151,35 @@ function closeModal() {
     document.getElementById('bookModal').style.display = 'none';
     document.body.classList.remove('modal-open'); // Erlaubt wieder das Scrollen
 }
+
+function addBook(shelfName, newBook) {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+        alert('Sie müssen sich einloggen, um ein Buch hinzuzufügen.');
+        return;
+    }
+
+    fetch(`https://shelfspacebackend-happy-gecko-kb.apps.01.cf.eu01.stackit.cloud/api/shelves/addBook`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ shelfName, book: newBook })
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Fehler beim Hinzufügen des Buches: " + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert("Buch erfolgreich hinzugefügt!");
+        })
+        .catch(error => {
+            alert(error.message);
+        });
+};
 
 // Klick auf Modal-Hintergrund schließt das Modal
 window.onclick = function(event) {
