@@ -118,6 +118,32 @@ public class ShelfController {
     }
 
     @CrossOrigin(origins = "http://localhost:63342")
+    @DeleteMapping("/deleteBook")
+    public ResponseEntity<?> deleteBookFromShelf(@RequestBody Map<String, Object> payload, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws IOException {
+        String shelfName = (String) payload.get("shelfName");
+        Map<String, String> bookData = (Map<String, String>) payload.get("book");
+
+        // Validieren und Token verarbeiten
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7); // Entfernt "Bearer "
+        }
+        String username = tokenManager.getUserForToken(token);
+        if (username == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ungültiges Token");
+        }
+
+        // Neues Buch mit Titel, Autor und Cover-URL
+        Book newBook = new Book();
+        newBook.setTitle(bookData.get("title"));
+        newBook.setAuthor(bookData.get("author"));
+        newBook.setCoverUrl(bookData.get("coverUrl"));
+
+        // Das Buch dem Regal hinzufügen
+        shelfService.removeBookFromShelf(username, shelfName, newBook);
+        return ResponseEntity.ok(Map.of("message", "Buch erfolgreich gelöscht", "book", newBook));
+    }
+
+    @CrossOrigin(origins = "http://localhost:63342")
     @GetMapping("/getAllShelves")
     public String getAllShelves() throws IOException {
         return shelfService.getAllShelves();

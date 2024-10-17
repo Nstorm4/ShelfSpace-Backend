@@ -240,4 +240,39 @@ public class ShelfService {
         // Rückgabe des gesamten Inhalts als String
         return result.toString();
     }
+
+    public void removeBookFromShelf(String username, String shelfName, Book newBook) {
+        Properties properties = new Properties();
+
+        // Laden der Properties-Datei
+        try (InputStream input = new FileInputStream(shelfPropertiesFile)) {
+            properties.load(input);
+
+            // Bestehende Regale des Benutzers laden
+            String shelfData = properties.getProperty(username);
+            if (shelfData != null && !shelfData.isEmpty()) {
+                List<Shelf> shelves = objectMapper.readValue(shelfData, new TypeReference<List<Shelf>>() {});
+
+                // Regal finden und Buch hinzufügen
+                for (Shelf shelf : shelves) {
+                    if (shelf.getName().equals(shelfName)) {
+                        shelf.getBooks().remove(newBook);
+                        break;
+                    }
+                }
+
+                // Aktualisiertes Regal speichern
+                String updatedShelvesJson = objectMapper.writeValueAsString(shelves);
+                properties.setProperty(username, updatedShelvesJson);
+
+                try (OutputStream output = new FileOutputStream(shelfPropertiesFile)) {
+                    properties.store(output, null);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

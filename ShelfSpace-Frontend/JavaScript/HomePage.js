@@ -70,21 +70,28 @@ document.addEventListener("DOMContentLoaded", function () {
         newShelf.classList.add('shelf');
 
         const booksHTML = shelf.books.length > 0
-            ? shelf.books.map(book => `<div class="book"><img src="${book.coverUrl}" alt="Buchcover"><p>${book.title}</p><p>${book.author}</p></div>`).join('')
+            ? shelf.books.map(book => `
+            <div class="book">
+            <img src="${book.coverUrl}" alt="Buchcover">
+            <p>${book.title}</p>
+            <p>${book.author}</p>
+            <button class="delete-book-button" onclick="deleteBook('${shelf.name}', '${book.title}', '${book.author}', '${book.coverUrl}')">Buch löschen</button>
+            </div>`).join('')
             : ''; // Entfernen des "(add a book)" Textes
 
         newShelf.innerHTML = `
-        <h3>${shelf.name}</h3>
-        <div class="bookshelf">
-            ${booksHTML}
-            <div class="add-book-button" onclick="addBookToShelf('${shelf.name}')">+ Add book</div>
-            <div class="delete-shelf-button" onclick="deleteShelf('${shelf.name}')">- Delete shelf</div> <!-- Correct onclick -->
-        </div>
+    <h3>${shelf.name}</h3>
+    <div class="bookshelf">
+        ${booksHTML}
+        <div class="add-book-button" onclick="addBookToShelf('${shelf.name}')">+ Add book</div>
+        <div class="delete-shelf-button" onclick="deleteShelf('${shelf.name}')">- Delete shelf</div>
+    </div>
     `;
 
         const shelvesContainer = document.getElementById('shelves');
         shelvesContainer.appendChild(newShelf);
     }
+
 
 
     // Funktion, um ein neues Regal hinzuzufügen
@@ -178,7 +185,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     };
 
-
+/*
     // Funktion zum Hinzufügen eines Buches ins DOM
     function appendBookToShelf(book, shelfName) {
         const shelves = document.querySelectorAll('.shelf'); // Alle Regale abrufen
@@ -202,6 +209,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+    */
 
     // Funktion zum Entfernen eines Regals aus dem Backend und dem DOM
     window.deleteShelf = function(shelfName) { // <-- Hinzufügen zu window
@@ -242,6 +250,86 @@ document.addEventListener("DOMContentLoaded", function () {
             const shelfTitle = shelf.querySelector('h3').textContent;
             if (shelfTitle === shelfName) {
                 shelf.remove();
+            }
+        });
+    }
+
+    // Funktion zum Hinzufügen eines Buches ins DOM (mit Lösch-Button)
+    function appendBookToShelf(book, shelfName) {
+        const shelves = document.querySelectorAll('.shelf'); // Alle Regale abrufen
+
+        // Durch alle Regale iterieren, um das richtige Regal zu finden
+        shelves.forEach(shelf => {
+            const shelfTitle = shelf.querySelector('h3').textContent;
+            if (shelfTitle === shelfName) {
+                const bookDiv = document.createElement('div');
+                bookDiv.classList.add('book');
+
+                // Buch wird jetzt mit Cover, Titel, Autor und Lösch-Button angezeigt
+                bookDiv.innerHTML = `
+                    <img src="${book.coverUrl}" alt="Buchcover">
+                    <p>${book.title}</p>
+                    <p>${book.author}</p>
+                    <button class="delete-book-button" onclick="deleteBook('${shelfName}', '${book.title}', '${book.author}', '${book.coverUrl}')">Buch löschen</button>
+                `;
+
+                const bookshelf = shelf.querySelector('.bookshelf');
+                bookshelf.appendChild(bookDiv);
+            }
+        });
+    }
+
+    // Funktion zum Löschen eines Buches (Backend-Aufruf)
+    window.deleteBook = function(shelfName, title, author, coverUrl) {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            alert('Sie müssen sich einloggen, um ein Buch zu löschen.');
+            return;
+        }
+
+        // Das zu löschende Buch-Datenobjekt erstellen
+        const bookToDelete = { title, author, coverUrl };
+
+        fetch(`https://shelfspacebackend-happy-gecko-kb.apps.01.cf.eu01.stackit.cloud/api/shelves/deleteBook`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ shelfName, book: bookToDelete })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Fehler beim Löschen des Buches: " + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                removeBookFromDOM(shelfName, title); // Buch nach erfolgreicher Löschung auch aus der DOM entfernen
+                alert(`Das Buch "${title}" wurde erfolgreich gelöscht!`);
+            })
+            .catch(error => {
+                alert(error.message);
+            });
+    };
+
+    // Funktion zum Entfernen eines Buches aus dem DOM
+    function removeBookFromDOM(shelfName, bookTitle) {
+        const shelves = document.querySelectorAll('.shelf'); // Alle Regale abrufen
+
+        // Das richtige Regal finden
+        shelves.forEach(shelf => {
+            const shelfTitle = shelf.querySelector('h3').textContent;
+            if (shelfTitle === shelfName) {
+                const books = shelf.querySelectorAll('.book'); // Alle Bücher in diesem Regal
+
+                // Das richtige Buch finden und entfernen
+                books.forEach(book => {
+                    const title = book.querySelector('p:first-of-type').textContent;
+                    if (title === bookTitle) {
+                        book.remove(); // Buch aus dem DOM entfernen
+                    }
+                });
             }
         });
     }
