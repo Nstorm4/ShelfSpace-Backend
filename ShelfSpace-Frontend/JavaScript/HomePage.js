@@ -122,50 +122,80 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     }
 
-    // Funktion zum Entfernen eines Regals
-    function deleteShelf(shelfName) {
-        const token = localStorage.getItem('authToken');
-        if (!token) {
-            alert('Sie müssen sich einloggen, um ein Regal zu entfernen.');
+    // Funktion zum Hinzufügen eines neuen Buches ins Regal
+    window.addBookToShelf = function(shelfName) {
+        const title = prompt("Bitte geben Sie den Titel des Buches ein:");
+        if (!title) {
+            alert("Titel ist erforderlich!");
             return;
         }
 
-        const shelfToDelete = { name: shelfName };
+        const author = prompt("Bitte geben Sie den Autor des Buches ein:");
+        if (!author) {
+            alert("Autor ist erforderlich!");
+            return;
+        }
 
-        fetch("https://shelfspacebackend-happy-gecko-kb.apps.01.cf.eu01.stackit.cloud/api/shelves/deleteShelf", {
-            method: "DELETE",
+        const coverUrl = prompt("Bitte geben Sie die URL für das Buchcover ein:");
+        if (!coverUrl) {
+            alert("Cover-URL ist erforderlich!");
+            return;
+        }
+
+        const newBook = { title, author, coverUrl };
+
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            alert('Sie müssen sich einloggen, um ein Buch hinzuzufügen.');
+            return;
+        }
+
+        fetch(`https://shelfspacebackend-happy-gecko-kb.apps.01.cf.eu01.stackit.cloud/api/shelves/addBook`, {
+            method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`
             },
-            body: JSON.stringify(shelfToDelete)
+            body: JSON.stringify({ shelfName, book: newBook })
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error("Fehler beim Löschen des Regals: " + response.statusText);
+                    throw new Error("Fehler beim Hinzufügen des Buches: " + response.statusText);
                 }
                 return response.json();
             })
             .then(data => {
-                alert(`Regal "${data.shelfName}" erfolgreich gelöscht!`);
-                removeShelfFromDOM(shelfName);
+                appendBookToShelf(data.book, shelfName);
+                alert("Buch erfolgreich hinzugefügt!");
             })
             .catch(error => {
                 alert(error.message);
             });
-    }
+    };
 
-    // Funktion zum Entfernen eines Regals aus dem DOM
-    function removeShelfFromDOM(shelfName) {
-        const shelves = document.querySelectorAll('.shelf');
+    // Funktion zum Hinzufügen eines Buches ins DOM
+    function appendBookToShelf(book, shelfName) {
+        const shelves = document.querySelectorAll('.shelf'); // Alle Regale abrufen
+
+        // Durch alle Regale iterieren, um das richtige Regal zu finden
         shelves.forEach(shelf => {
             const shelfTitle = shelf.querySelector('h3').textContent;
             if (shelfTitle === shelfName) {
-                shelf.remove();
+                const bookDiv = document.createElement('div');
+                bookDiv.classList.add('book');
+
+                // Buch wird jetzt mit Cover, Titel und Autor angezeigt
+                bookDiv.innerHTML = `
+                    <img src="${book.coverUrl}" alt="Buchcover">
+                    <p>${book.title}</p>
+                    <p>${book.author}</p>
+                `;
+
+                const bookshelf = shelf.querySelector('.bookshelf');
+                bookshelf.appendChild(bookDiv);
             }
         });
     }
-
 
     // Funktion zum Ausloggen
     function logout() {
@@ -194,44 +224,4 @@ document.addEventListener("DOMContentLoaded", function () {
                 alert(error.message);
             });
     }
-
-    // Initiales Laden der Regale zum Löschen
-    document.getElementById('deleteShelfButton').addEventListener('click', function() {
-        fetchAndDisplayShelves();
-    });
-
-    // Funktion zum Abrufen und Anzeigen der Regale für das Löschen
-    function fetchAndDisplayShelves() {
-        const token = localStorage.getItem('authToken');
-        if (!token) {
-            alert('Sie müssen sich einloggen, um die Regale anzuzeigen.');
-            return;
-        }
-
-        fetch("https://shelfspacebackend-happy-gecko-kb.apps.01.cf.eu01.stackit.cloud/api/shelves/userShelves", {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Fehler beim Abrufen der Regale");
-                }
-                return response.json();
-            })
-            .then(shelves => {
-                const shelfNames = shelves.map(shelf => shelf.name);
-                const shelfToDelete = prompt("Wählen Sie ein Regal zum Löschen aus:\n" + shelfNames.join("\n"));
-                if (shelfToDelete && shelfNames.includes(shelfToDelete)) {
-                    deleteShelf(shelfToDelete);
-                } else {
-                    alert("Ungültiges Regal ausgewählt.");
-                }
-            })
-            .catch(error => {
-                alert(error.message);
-            });
-    }
 });
-
