@@ -74,16 +74,18 @@ document.addEventListener("DOMContentLoaded", function () {
             : ''; // Entfernen des "(add a book)" Textes
 
         newShelf.innerHTML = `
-            <h3>${shelf.name}</h3>
-            <div class="bookshelf">
-                ${booksHTML}
-                <div class="add-book-button" onclick="addBookToShelf('${shelf.name}')">+ Add book</div>
-            </div>
-        `;
+        <h3>${shelf.name}</h3>
+        <div class="bookshelf">
+            ${booksHTML}
+            <div class="add-book-button" onclick="addBookToShelf('${shelf.name}')">+ Add book</div>
+            <div class="delete-shelf-button" onclick="deleteShelf('${shelf.name}')">- Delete shelf</div> <!-- Correct onclick -->
+        </div>
+    `;
 
         const shelvesContainer = document.getElementById('shelves');
         shelvesContainer.appendChild(newShelf);
     }
+
 
     // Funktion, um ein neues Regal hinzuzufügen
     function addShelf(shelfName) {
@@ -193,6 +195,49 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 const bookshelf = shelf.querySelector('.bookshelf');
                 bookshelf.appendChild(bookDiv);
+            }
+        });
+    }
+
+    // Funktion zum Entfernen eines Regals aus dem Backend und dem DOM
+    window.deleteShelf = function(shelfName) { // <-- Hinzufügen zu window
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            alert('Sie müssen sich einloggen, um ein Regal zu entfernen.');
+            return;
+        }
+
+        fetch(`https://shelfspacebackend-happy-gecko-kb.apps.01.cf.eu01.stackit.cloud/api/shelves/deleteShelf`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ name: shelfName })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Fehler beim Löschen des Regals: " + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                removeShelfFromDOM(shelfName);
+                alert(`Regal "${shelfName}" erfolgreich gelöscht!`);
+            })
+            .catch(error => {
+                alert(error.message);
+            });
+    };
+
+
+    // Funktion zum Entfernen eines Regals aus dem DOM
+    function removeShelfFromDOM(shelfName) {
+        const shelves = document.querySelectorAll('.shelf');
+        shelves.forEach(shelf => {
+            const shelfTitle = shelf.querySelector('h3').textContent;
+            if (shelfTitle === shelfName) {
+                shelf.remove();
             }
         });
     }
