@@ -1,0 +1,20 @@
+<div class="shelf-container">
+  <h1>Shelves</h1>
+  <input [(ngModel)]="newShelfName" placeholder="Enter shelf name" />
+  <button (click)="addShelf()">Add Shelf</button>
+  <ul>
+    <li *ngFor="let shelf of shelves">
+      <h2>{{ shelf.name }}</h2>
+      <button (click)="addBook(shelf.name)">Add Book</button>
+      <button (click)="deleteShelf(shelf.name)">Delete Shelf</button>
+      <ul>
+        <li *ngFor="let book of shelf.books">
+          <span>{{ book.title }} by {{ book.author }}</span>
+          <button (click)="deleteBook(shelf.name, book)">Delete Book</button>
+        </li>
+      </ul>
+    </li>
+  </ul>
+  <button (click)="logout()">Logout</button>
+</div>
+
