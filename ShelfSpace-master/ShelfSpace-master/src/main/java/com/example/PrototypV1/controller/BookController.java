@@ -11,7 +11,8 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
-    @CrossOrigin(origins = "http://localhost:63342")
+    //@CrossOrigin(origins = "http://localhost:63342")
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/books")
     public String searchBooks(@RequestParam String title) {
         try {
