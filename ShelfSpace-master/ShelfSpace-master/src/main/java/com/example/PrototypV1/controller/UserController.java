@@ -15,7 +15,7 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-    @CrossOrigin(origins = "http://localhost:63342")
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
         // Überprüfen, ob der Benutzer bereits existiert
@@ -27,18 +27,18 @@ public class UserController {
         return ResponseEntity.ok("Registrierung erfolgreich");
     }
 
-    @CrossOrigin(origins = "http://localhost:63342")
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/login")
     public String login(@RequestBody User user) {
         return userService.login(user.getUsername(), user.getPassword());
     }
 
-    @CrossOrigin(origins = "http://localhost:63342")
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/test")
     public String getAllUsers() throws IOException {
         return userService.getAllUsers();
     }
-    @CrossOrigin(origins = "http://localhost:63342")
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
         if (token != null && !token.isEmpty()) {

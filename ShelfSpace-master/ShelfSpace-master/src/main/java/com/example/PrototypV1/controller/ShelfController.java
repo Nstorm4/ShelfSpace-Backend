@@ -1,8 +1,7 @@
 package com.example.PrototypV1.controller;
 
 import com.example.PrototypV1.manager.TokenManager;
-import com.example.PrototypV1.model.Book;
-import com.example.PrototypV1.model.Shelf;
+import com.example.PrototypV1.model.*;
 import com.example.PrototypV1.service.ShelfService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,7 +23,7 @@ public class ShelfController {
         this.tokenManager = tokenManager;
     }
 
-    @CrossOrigin(origins = "http://localhost:63342")
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/newShelf")
     public ResponseEntity<?> newShelf(@RequestBody Shelf shelf, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws IOException {
         if (token != null && token.startsWith("Bearer ")) {
@@ -48,7 +47,7 @@ public class ShelfController {
         ));
     }
 
-    @CrossOrigin(origins = "http://localhost:63342")
+    @CrossOrigin(origins = "http://localhost:3000")
     @DeleteMapping("/deleteShelf")
     public ResponseEntity<?> deleteShelf(@RequestBody Shelf shelf, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws IOException {
         if (token != null && token.startsWith("Bearer ")) {
@@ -73,7 +72,7 @@ public class ShelfController {
         ));
     }
 
-    @CrossOrigin(origins = "http://localhost:63342")
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/userShelves")
     public ResponseEntity<?> getUserShelves(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         // Token Format: "Bearer <token>", wir müssen "Bearer " entfernen, um nur das Token zu bekommen
@@ -91,7 +90,7 @@ public class ShelfController {
         List<Shelf> shelves = shelfService.getShelvesByUsername(username);
         return ResponseEntity.ok(shelves);
     }
-    @CrossOrigin(origins = "http://localhost:63342")
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/addBook")
     public ResponseEntity<?> addBookToShelf(@RequestBody Map<String, Object> payload, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws IOException {
         String shelfName = (String) payload.get("shelfName");
@@ -117,7 +116,7 @@ public class ShelfController {
         return ResponseEntity.ok(Map.of("message", "Buch erfolgreich hinzugefügt", "book", newBook));
     }
 
-    @CrossOrigin(origins = "http://localhost:63342")
+    @CrossOrigin(origins = "http://localhost:3000")
     @DeleteMapping("/deleteBook")
     public ResponseEntity<?> deleteBookFromShelf(@RequestBody Map<String, Object> payload, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws IOException {
         String shelfName = (String) payload.get("shelfName");
@@ -150,10 +149,10 @@ public class ShelfController {
         }
     }
 
-
-    @CrossOrigin(origins = "http://localhost:63342")
     @GetMapping("/getAllShelves")
+    @CrossOrigin(origins = "http://localhost:3000")
     public String getAllShelves() throws IOException {
         return shelfService.getAllShelves();
     }
+
 }
