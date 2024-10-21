@@ -124,13 +124,18 @@ public class ShelfService {
             if (shelfData != null && !shelfData.isEmpty()) {
                 List<Shelf> shelves = objectMapper.readValue(shelfData, new TypeReference<List<Shelf>>() {});
 
+                boolean shelfFound = false;
                 // Regal finden und Buch hinzufügen
                 for (Shelf shelf : shelves) {
                     if (shelf.getName().equals(shelfName)) {
+                        if (shelf.getBooks() == null) {
+                            shelf.setBooks(new ArrayList<>());
+                        }
                         shelf.getBooks().add(book);
+                        shelfFound = true;
                         break;
                     }
-                }
+}
 
                 // Aktualisiertes Regal speichern
                 String updatedShelvesJson = objectMapper.writeValueAsString(shelves);
