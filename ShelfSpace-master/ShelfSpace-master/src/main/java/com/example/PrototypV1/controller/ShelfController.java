@@ -24,12 +24,6 @@ public class ShelfController {
     @PostMapping("/newShelf")
     public ResponseEntity<?> newShelf(@RequestBody Shelf shelf, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         try {
-//            if (token != null && token.startsWith("Bearer ")) {
-//                token = token.substring(7); // Entfernt "Bearer "
-//            }
-//
-//            String username = tokenManager.getUserForToken(token);
-
             String username = validateAndExtractUsername(token);
             if (username == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ungültiges Token");
@@ -51,12 +45,6 @@ public class ShelfController {
     @DeleteMapping("/deleteShelf")
     public ResponseEntity<?> deleteShelf(@RequestBody Shelf shelf, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         try {
-//            if (token != null && token.startsWith("Bearer ")) {
-//                token = token.substring(7); // Entfernt "Bearer "
-//            }
-//
-//            String username = tokenManager.getUserForToken(token);
-
             String username = validateAndExtractUsername(token);
 
             if (username == null) {
@@ -77,12 +65,6 @@ public class ShelfController {
     @GetMapping("/userShelves")
     public ResponseEntity<?> getUserShelves(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         try {
-//            if (token != null && token.startsWith("Bearer ")) {
-//                token = token.substring(7); // Entfernt "Bearer "
-//            }
-//
-//            String username = tokenManager.getUserForToken(token);
-
             String username = validateAndExtractUsername(token);
             if (username == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ungültiges Token");
@@ -101,12 +83,6 @@ public class ShelfController {
         try {
             String shelfName = (String) payload.get("shelfName");
             Map<String, String> bookData = (Map<String, String>) payload.get("book");
-
-//            if (token != null && token.startsWith("Bearer ")) {
-//                token = token.substring(7); // Entfernt "Bearer "
-//            }
-//
-//            String username = tokenManager.getUserForToken(token);
             String username = validateAndExtractUsername(token);
             if (username == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ungültiges Token");
@@ -132,12 +108,6 @@ public class ShelfController {
         try {
             String shelfName = (String) payload.get("shelfName");
             Map<String, String> bookData = (Map<String, String>) payload.get("book");
-
-//            if (token != null && token.startsWith("Bearer ")) {
-//                token = token.substring(7); // Entfernt "Bearer "
-//            }
-//
-//            String username = tokenManager.getUserForToken(token);
             String username = validateAndExtractUsername(token);
             if (username == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ungültiges Token");

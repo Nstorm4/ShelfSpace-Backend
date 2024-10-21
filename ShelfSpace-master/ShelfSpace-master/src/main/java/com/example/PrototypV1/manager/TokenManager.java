@@ -1,5 +1,7 @@
 package com.example.PrototypV1.manager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -11,6 +13,7 @@ import java.util.Properties;
 public class TokenManager {
 
     private static final int TOKEN_LENGTH = 32; // Token Länge in Bytes
+    private static final Logger logger = LoggerFactory.getLogger(TokenManager.class); // Logger initialisieren
     private final SecureRandom secureRandom = new SecureRandom();
     private final String propertiesFilePath = "token.properties";
 
@@ -19,7 +22,7 @@ public class TokenManager {
 
     public String generateTokenForUser(String username) {
         String token = generateRandomToken();
-        System.out.println("Generierter Token: " + token + " für Benutzer: " + username);
+        logger.info("Generated token for user: {}", username);
         saveTokensToProperties(username, token); // Speichere die Tokens nach der Erstellung
         return token;
     }
@@ -34,7 +37,11 @@ public class TokenManager {
         Properties properties = new Properties();
         try (InputStream input = new FileInputStream(propertiesFilePath)) {
             properties.load(input);
+        } catch (FileNotFoundException e) {
+            logger.error("Token properties file not found: {}", propertiesFilePath, e);
+            return null;  // oder Optional.empty() für bessere Handhabung
         } catch (IOException e) {
+            logger.error("Error reading token properties file: {}", propertiesFilePath, e);
             return null;
         }
         return properties.getProperty(token);
@@ -42,25 +49,37 @@ public class TokenManager {
 
     private void saveTokensToProperties(String username, String token) {
         Properties properties = new Properties();
+        // Lädt bestehende Tokens
         try (InputStream input = new FileInputStream(propertiesFilePath)) {
             properties.load(input);
+        } catch (FileNotFoundException e) {
+            logger.warn("Token properties file not found. Creating a new one: {}", propertiesFilePath);
+            // Es könnte in Ordnung sein, eine neue Datei zu erstellen, daher keine Rückgabe.
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error loading token properties file: {}", propertiesFilePath, e);
+            return;
         }
+
+        // Speichert das neue Token
         properties.setProperty(token, username);
 
         try (OutputStream output = new FileOutputStream(propertiesFilePath)) {
             properties.store(output, null);
+            logger.info("Token saved for user: {}", username);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error saving token to properties file: {}", propertiesFilePath, e);
         }
     }
+
     public void removeToken(String token) {
         Properties properties = new Properties();
         try (InputStream input = new FileInputStream(propertiesFilePath)) {
             properties.load(input);
+        } catch (FileNotFoundException e) {
+            logger.error("Token properties file not found: {}", propertiesFilePath, e);
+            return;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error reading token properties file: {}", propertiesFilePath, e);
             return;
         }
 
@@ -71,9 +90,12 @@ public class TokenManager {
             // Speichere die aktualisierte Datei
             try (OutputStream output = new FileOutputStream(propertiesFilePath)) {
                 properties.store(output, null);
+                logger.info("Token {} removed successfully.", token);
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Error saving properties file after token removal: {}", propertiesFilePath, e);
             }
+        } else {
+            logger.warn("Token {} not found, nothing to remove.", token);
         }
     }
 }
