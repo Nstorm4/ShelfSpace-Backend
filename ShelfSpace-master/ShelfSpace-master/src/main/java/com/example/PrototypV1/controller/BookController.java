@@ -1,25 +1,30 @@
 package com.example.PrototypV1.controller;
 
-import com.example.PrototypV1.service.*;
+import com.example.PrototypV1.service.BookService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 public class BookController {
 
+    private static final Logger logger = LoggerFactory.getLogger(BookController.class);
+
     @Autowired
     private BookService bookService;
 
-    //@CrossOrigin(origins = "http://localhost:63342")
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/books")
     public String searchBooks(@RequestParam String title) {
         try {
-            String books = bookService.searchBooksByTitle(title);
-            return books;
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            return bookService.searchBooksByTitle(title);
+        } catch (Exception e) {
+            logger.error("Unexpected error occurred while searching books with title: {}", title, e);
             return e.toString();
         }
     }
