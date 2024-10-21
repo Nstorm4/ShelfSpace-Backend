@@ -1,15 +1,12 @@
 package com.example.PrototypV1.controller;
 
-import com.example.PrototypV1.manager.TokenManager;
+import com.example.PrototypV1.manager.*;
 import com.example.PrototypV1.model.*;
-import com.example.PrototypV1.service.ShelfService;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.example.PrototypV1.service.*;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import java.io.*;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/shelves")
@@ -25,134 +22,156 @@ public class ShelfController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/newShelf")
-    public ResponseEntity<?> newShelf(@RequestBody Shelf shelf, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws IOException {
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7); // Entfernt "Bearer "
+    public ResponseEntity<?> newShelf(@RequestBody Shelf shelf, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        try {
+//            if (token != null && token.startsWith("Bearer ")) {
+//                token = token.substring(7); // Entfernt "Bearer "
+//            }
+//
+//            String username = tokenManager.getUserForToken(token);
+
+            String username = validateAndExtractUsername(token);
+            if (username == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ungültiges Token");
+            }
+
+            shelfService.createShelf(shelf, username);
+            return ResponseEntity.ok(Map.of(
+                    "message", "Regal erfolgreich erstellt",
+                    "shelfName", shelf.getName()
+            ));
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fehler beim Erstellen des Regals: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ein unerwarteter Fehler ist aufgetreten: " + e.getMessage());
         }
-
-        // Überprüfen, ob das Token gültig ist
-        String username = tokenManager.getUserForToken(token);
-
-        if (username == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ungültiges Token");
-        }
-
-        // Wenn das Token gültig ist, Regal erstellen
-        shelfService.createShelf(shelf, username);
-
-        // Rückgabe eines strukturierten JSON-Objekts
-        return ResponseEntity.ok(Map.of(
-                "message", "Regal erfolgreich erstellt",
-                "shelfName", shelf.getName() // Regalname zurückgeben
-        ));
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
     @DeleteMapping("/deleteShelf")
-    public ResponseEntity<?> deleteShelf(@RequestBody Shelf shelf, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws IOException {
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7); // Entfernt "Bearer "
+    public ResponseEntity<?> deleteShelf(@RequestBody Shelf shelf, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        try {
+//            if (token != null && token.startsWith("Bearer ")) {
+//                token = token.substring(7); // Entfernt "Bearer "
+//            }
+//
+//            String username = tokenManager.getUserForToken(token);
+
+            String username = validateAndExtractUsername(token);
+
+            if (username == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ungültiges Token");
+            }
+
+            shelfService.deleteShelf(shelf, username);
+            return ResponseEntity.ok(Map.of(
+                    "message", "Regal erfolgreich gelöscht",
+                    "shelfName", shelf.getName()
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ein unerwarteter Fehler ist aufgetreten: " + e.getMessage());
         }
-
-        // Überprüfen, ob das Token gültig ist
-        String username = tokenManager.getUserForToken(token);
-
-        if (username == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ungültiges Token");
-        }
-
-        // Wenn das Token gültig ist, Regal erstellen
-        System.out.println("Das ist das Regal wies im Backend ankommt:" + shelf.toString());
-        shelfService.deleteShelf(shelf, username);
-
-        // Rückgabe eines strukturierten JSON-Objekts
-        return ResponseEntity.ok(Map.of(
-                "message", "Regal erfolgreich gelöscht",
-                "shelfName", shelf.getName() // Regalname zurückgeben
-        ));
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/userShelves")
     public ResponseEntity<?> getUserShelves(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
-        // Token Format: "Bearer <token>", wir müssen "Bearer " entfernen, um nur das Token zu bekommen
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7); // Entfernt "Bearer "
-        }
+        try {
+//            if (token != null && token.startsWith("Bearer ")) {
+//                token = token.substring(7); // Entfernt "Bearer "
+//            }
+//
+//            String username = tokenManager.getUserForToken(token);
 
-        // Überprüfen, ob das Token gültig ist
-        String username = tokenManager.getUserForToken(token);
-        if (username == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ungültiges Token");
-        }
+            String username = validateAndExtractUsername(token);
+            if (username == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ungültiges Token");
+            }
 
-        // Regale für den Benutzer abrufen
-        List<Shelf> shelves = shelfService.getShelvesByUsername(username);
-        return ResponseEntity.ok(shelves);
+            List<Shelf> shelves = shelfService.getShelvesByUsername(username);
+            return ResponseEntity.ok(shelves);
+              } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ein unerwarteter Fehler ist aufgetreten: " + e.getMessage());
+        }
     }
+
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/addBook")
-    public ResponseEntity<?> addBookToShelf(@RequestBody Map<String, Object> payload, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws IOException {
-        String shelfName = (String) payload.get("shelfName");
-        Map<String, String> bookData = (Map<String, String>) payload.get("book");
+    public ResponseEntity<?> addBookToShelf(@RequestBody Map<String, Object> payload, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        try {
+            String shelfName = (String) payload.get("shelfName");
+            Map<String, String> bookData = (Map<String, String>) payload.get("book");
 
-        // Validieren und Token verarbeiten
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7); // Entfernt "Bearer "
+//            if (token != null && token.startsWith("Bearer ")) {
+//                token = token.substring(7); // Entfernt "Bearer "
+//            }
+//
+//            String username = tokenManager.getUserForToken(token);
+            String username = validateAndExtractUsername(token);
+            if (username == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ungültiges Token");
+            }
+
+            Book newBook = new Book();
+            newBook.setTitle(bookData.get("title"));
+            newBook.setAuthor(bookData.get("author"));
+            newBook.setCoverUrl(bookData.get("coverUrl"));
+
+            shelfService.addBookToShelf(username, shelfName, newBook);
+            return ResponseEntity.ok(Map.of("message", "Buch erfolgreich hinzugefügt", "book", newBook));
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fehler beim Hinzufügen des Buches: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ein unerwarteter Fehler ist aufgetreten: " + e.getMessage());
         }
-        String username = tokenManager.getUserForToken(token);
-        if (username == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ungültiges Token");
-        }
-
-        // Neues Buch mit Titel, Autor und Cover-URL
-        Book newBook = new Book();
-        newBook.setTitle(bookData.get("title"));
-        newBook.setAuthor(bookData.get("author"));
-        newBook.setCoverUrl(bookData.get("coverUrl"));
-
-        // Das Buch dem Regal hinzufügen
-        shelfService.addBookToShelf(username, shelfName, newBook);
-        return ResponseEntity.ok(Map.of("message", "Buch erfolgreich hinzugefügt", "book", newBook));
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
     @DeleteMapping("/deleteBook")
-    public ResponseEntity<?> deleteBookFromShelf(@RequestBody Map<String, Object> payload, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws IOException {
-        String shelfName = (String) payload.get("shelfName");
-        Map<String, String> bookData = (Map<String, String>) payload.get("book");
-
-        // Validieren und Token verarbeiten
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7); // Entfernt "Bearer "
-        }
-        String username = tokenManager.getUserForToken(token);
-        if (username == null) {
-            System.err.println("Ungültiges Token für Benutzer");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ungültiges Token");
-        }
-
-        // Neues Buch mit Titel, Autor und Cover-URL erstellen
-        Book newBook = new Book();
-        newBook.setTitle(bookData.get("title"));
-        newBook.setAuthor(bookData.get("author"));
-        newBook.setCoverUrl(bookData.get("coverUrl"));
-
+    public ResponseEntity<?> deleteBookFromShelf(@RequestBody Map<String, Object> payload, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         try {
-            // Das Buch aus dem Regal entfernen
+            String shelfName = (String) payload.get("shelfName");
+            Map<String, String> bookData = (Map<String, String>) payload.get("book");
+
+//            if (token != null && token.startsWith("Bearer ")) {
+//                token = token.substring(7); // Entfernt "Bearer "
+//            }
+//
+//            String username = tokenManager.getUserForToken(token);
+            String username = validateAndExtractUsername(token);
+            if (username == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ungültiges Token");
+            }
+
+            Book newBook = new Book();
+            newBook.setTitle(bookData.get("title"));
+            newBook.setAuthor(bookData.get("author"));
+            newBook.setCoverUrl(bookData.get("coverUrl"));
+
             shelfService.removeBookFromShelf(username, shelfName, newBook);
             return ResponseEntity.ok(Map.of("message", "Buch erfolgreich gelöscht", "book", newBook));
         } catch (RuntimeException e) {
-            // Log für den Fehlerfall
-            System.err.println("Fehler beim Löschen des Buches: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fehler beim Löschen des Buches: " + e.getMessage());
+               } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ein unerwarteter Fehler ist aufgetreten: " + e.getMessage());
         }
     }
 
     @GetMapping("/getAllShelves")
     @CrossOrigin(origins = "http://localhost:3000")
-    public String getAllShelves() throws IOException {
-        return shelfService.getAllShelves();
+    public ResponseEntity<?> getAllShelves() {
+        try {
+            String allShelves = shelfService.getAllShelves();
+            return ResponseEntity.ok(allShelves);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ein unerwarteter Fehler ist aufgetreten: " + e.getMessage());
+        }
     }
 
+    private String validateAndExtractUsername(String token) {
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        return tokenManager.getUserForToken(token);
+    }
 }
