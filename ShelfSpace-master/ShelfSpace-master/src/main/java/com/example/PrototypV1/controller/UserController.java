@@ -21,7 +21,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    // @CrossOrigin(origins = "http://shelfspace-react.apps.01.cf.eu01.stackit.cloud")
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
         // Überprüfen, ob der Benutzer bereits existiert
@@ -36,7 +36,7 @@ public class UserController {
         return ResponseEntity.ok("Registrierung erfolgreich");
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    // @CrossOrigin(origins = "http://shelfspace-react.apps.01.cf.eu01.stackit.cloud")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
         String token = userService.login(user.getUsername(), user.getPassword());
@@ -49,7 +49,7 @@ public class UserController {
         return ResponseEntity.ok(token);
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    // @CrossOrigin(origins = "http://shelfspace-react.apps.01.cf.eu01.stackit.cloud")
     @GetMapping("/test")
     public ResponseEntity<String> getAllUsers() {
         try {
@@ -62,7 +62,7 @@ public class UserController {
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    // @CrossOrigin(origins = "http://shelfspace-react.apps.01.cf.eu01.stackit.cloud")
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
         if (token != null && !token.isEmpty()) {

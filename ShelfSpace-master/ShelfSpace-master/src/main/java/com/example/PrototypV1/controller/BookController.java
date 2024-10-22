@@ -18,7 +18,7 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    // @CrossOrigin(origins = "http://shelfspace-react.apps.01.cf.eu01.stackit.cloud")
     @GetMapping("/books")
     public String searchBooks(@RequestParam String title) {
         try {

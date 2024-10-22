@@ -20,7 +20,7 @@ public class ShelfController {
         this.tokenManager = tokenManager;
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    // @CrossOrigin(origins = "http://shelfspace-react.apps.01.cf.eu01.stackit.cloud")
     @PostMapping("/newShelf")
     public ResponseEntity<?> newShelf(@RequestBody Shelf shelf, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         try {
@@ -41,7 +41,7 @@ public class ShelfController {
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    // @CrossOrigin(origins = "http://shelfspace-react.apps.01.cf.eu01.stackit.cloud")
     @DeleteMapping("/deleteShelf")
     public ResponseEntity<?> deleteShelf(@RequestBody Shelf shelf, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         try {
@@ -61,7 +61,7 @@ public class ShelfController {
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    // @CrossOrigin(origins = "http://shelfspace-react.apps.01.cf.eu01.stackit.cloud")
     @GetMapping("/userShelves")
     public ResponseEntity<?> getUserShelves(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         try {
@@ -77,7 +77,7 @@ public class ShelfController {
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    // @CrossOrigin(origins = "http://shelfspace-react.apps.01.cf.eu01.stackit.cloud")
     @PostMapping("/addBook")
     public ResponseEntity<?> addBookToShelf(@RequestBody Map<String, Object> payload, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         try {
@@ -102,7 +102,7 @@ public class ShelfController {
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    // @CrossOrigin(origins = "http://shelfspace-react.apps.01.cf.eu01.stackit.cloud")
     @DeleteMapping("/deleteBook")
     public ResponseEntity<?> deleteBookFromShelf(@RequestBody Map<String, Object> payload, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         try {
@@ -128,7 +128,7 @@ public class ShelfController {
     }
 
     @GetMapping("/getAllShelves")
-    @CrossOrigin(origins = "http://localhost:3000")
+    // @CrossOrigin(origins = "http://shelfspace-react.apps.01.cf.eu01.stackit.cloud")
     public ResponseEntity<?> getAllShelves() {
         try {
             String allShelves = shelfService.getAllShelves();
