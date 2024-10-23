@@ -1,16 +1,36 @@
 package com.example.PrototypV1.model;
 
+import jakarta.persistence.*;
+
+
+@Entity
+@Table(name = "ShelfSpaceBooks")
 public class Book {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String title;
     private String author;
     private String coverUrl;
-
-    public Book() {}
 
     public Book(String title, String author, String coverUrl) {
         this.title = title;
         this.author = author;
         this.coverUrl = coverUrl;
+    }
+
+    public Book() {
+
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {

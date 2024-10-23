@@ -52,14 +52,10 @@ public class UserController {
     // @CrossOrigin(origins = "http://shelfspace-react.apps.01.cf.eu01.stackit.cloud")
     @GetMapping("/test")
     public ResponseEntity<String> getAllUsers() {
-        try {
             String users = userService.getAllUsers();
             logger.info("Alle Benutzer erfolgreich abgerufen");
             return ResponseEntity.ok(users);
-        } catch (IOException e) {
-            logger.error("Fehler beim Abrufen der Benutzerliste", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fehler beim Abrufen der Benutzerliste");
-        }
+
     }
 
     // @CrossOrigin(origins = "http://shelfspace-react.apps.01.cf.eu01.stackit.cloud")

@@ -34,9 +34,7 @@ public class ShelfController {
                     "message", "Regal erfolgreich erstellt",
                     "shelfName", shelf.getName()
             ));
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fehler beim Erstellen des Regals: " + e.getMessage());
-        } catch (Exception e) {
+               } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ein unerwarteter Fehler ist aufgetreten: " + e.getMessage());
         }
     }
@@ -51,7 +49,7 @@ public class ShelfController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ungültiges Token");
             }
 
-            shelfService.deleteShelf(shelf, username);
+            shelfService.deleteShelf(shelf.getName(), username);
             return ResponseEntity.ok(Map.of(
                     "message", "Regal erfolgreich gelöscht",
                     "shelfName", shelf.getName()
@@ -95,9 +93,7 @@ public class ShelfController {
 
             shelfService.addBookToShelf(username, shelfName, newBook);
             return ResponseEntity.ok(Map.of("message", "Buch erfolgreich hinzugefügt", "book", newBook));
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fehler beim Hinzufügen des Buches: " + e.getMessage());
-        } catch (Exception e) {
+          } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ein unerwarteter Fehler ist aufgetreten: " + e.getMessage());
         }
     }
