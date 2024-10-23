@@ -1,5 +1,6 @@
 package com.example.PrototypV1.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -8,29 +9,24 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(unique = true, nullable = false)  // Username ist einzigartig und darf nicht null sein
     private String username;
 
-    @Column(nullable = false)  // Username ist einzigartig und darf nicht null sein
+    @Column(nullable = false)
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("user")  // Ignoriert die user-Referenz bei der Serialisierung von Shelves
     private List<Shelf> shelves;
 
     // Getter, Setter, Constructors
 
     public User() {}
 
-// Konstruktor mit Parametern
     public User(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
-    // Getter und Setter
     public String getUsername() {
         return username;
     }

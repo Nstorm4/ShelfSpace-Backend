@@ -15,12 +15,14 @@ public class Shelf {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;  // Referenz auf den Benutzer, dem das Regal gehört
+    @JoinColumn(name = "username", referencedColumnName = "username", nullable = false)
+    private User user;  // Hier referenzierst du den User, aber ohne rekursive Verschachtelung
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "shelf_id")
     private List<Book> books;
+
+    // Getter und Setter
 
     public Shelf() {}
 
@@ -45,19 +47,19 @@ public Long getId() {
         this.name = name;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public List<Book> getBooks() {
         return books;
     }
 
     public void setBooks(List<Book> books) {
         this.books = books;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
