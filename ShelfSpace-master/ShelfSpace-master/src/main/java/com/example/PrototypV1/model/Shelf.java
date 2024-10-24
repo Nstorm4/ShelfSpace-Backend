@@ -1,5 +1,6 @@
 package com.example.PrototypV1.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class Shelf {
 
     @ManyToOne
     @JoinColumn(name = "username", referencedColumnName = "username", nullable = false)
+    @JsonIgnore
     private User user;  // Hier referenzierst du den User, aber ohne rekursive Verschachtelung
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

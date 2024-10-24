@@ -85,8 +85,9 @@ public class ShelfService {
     /**
      * Löscht ein Regal eines Benutzers basierend auf dem Benutzernamen und Regalnamen.
      */
-    public void deleteShelf(String username, String shelfName) {
+    public void deleteShelf(String shelfName, String username) {
         User user = userRepository.findByUsername(username);
+        System.out.println("I am in the ShelfService deleteShelf and this is the user:" + user);
         if (user == null) {
             logger.warn("Benutzer '{}' nicht gefunden", username);
             throw new IllegalArgumentException("Benutzer nicht gefunden");
@@ -95,9 +96,12 @@ public class ShelfService {
         Optional<Shelf> shelfOptional = user.getShelves().stream()
                 .filter(shelf -> shelf.getName().equals(shelfName))
                 .findFirst();
+        System.out.println("I am in the Service, I found the shelf: " + shelfOptional.toString());
 
         if (shelfOptional.isPresent()) {
-            shelfRepository.delete(shelfOptional.get());
+            Shelf shelf = shelfOptional.get();
+            user.getShelves().remove(shelf);  // Entferne das Regal aus der Liste des Benutzers
+            shelfRepository.delete(shelf);    // Lösche das Regal aus der Datenbank
             logger.info("Regal '{}' für Benutzer '{}' erfolgreich gelöscht", shelfName, username);
         } else {
             logger.warn("Regal '{}' für Benutzer '{}' nicht gefunden", shelfName, username);

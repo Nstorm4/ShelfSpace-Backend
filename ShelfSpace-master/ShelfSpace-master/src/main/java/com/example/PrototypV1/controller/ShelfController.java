@@ -44,7 +44,7 @@ public class ShelfController {
     public ResponseEntity<?> deleteShelf(@RequestBody Shelf shelf, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         try {
             String username = validateAndExtractUsername(token);
-
+            System.out.println("I am in deleteShelf with this username:" + username);
             if (username == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Ungültiges Token");
             }
