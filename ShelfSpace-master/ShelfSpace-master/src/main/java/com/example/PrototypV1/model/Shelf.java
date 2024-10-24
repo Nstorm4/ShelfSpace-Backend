@@ -1,6 +1,7 @@
 package com.example.PrototypV1.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -18,10 +19,14 @@ public class Shelf {
     @ManyToOne
     @JoinColumn(name = "username", referencedColumnName = "username", nullable = false)
     @JsonIgnore
-    private User user;  // Hier referenzierst du den User, aber ohne rekursive Verschachtelung
+    private User user;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "shelf_id")
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "shelf_books",
+            joinColumns = @JoinColumn(name = "shelf_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id")
+    )
     private List<Book> books;
 
     // Getter und Setter

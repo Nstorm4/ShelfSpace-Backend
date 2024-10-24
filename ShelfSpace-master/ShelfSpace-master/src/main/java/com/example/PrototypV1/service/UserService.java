@@ -14,14 +14,14 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final TokenManager tokenManager = new TokenManager();
+    private final TokenManager tokenManager;
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, TokenManager tokenManager) {
         this.userRepository = userRepository;
+        this.tokenManager = tokenManager;
     }
-
     // Benutzer registrieren
     public void register(User user) {
         if (userRepository.existsById(user.getUsername())) {
