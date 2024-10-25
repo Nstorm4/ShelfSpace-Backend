@@ -20,11 +20,20 @@ public class BookController {
 
     // @CrossOrigin(origins = "http://shelfspace-react.apps.01.cf.eu01.stackit.cloud")
     @GetMapping("/books")
-    public String searchBooks(@RequestParam String title) {
+    public String searchBooksByTitle(@RequestParam String title) {
         try {
             return bookService.searchBooksByTitle(title);
         } catch (Exception e) {
             logger.error("Unexpected error occurred while searching books with title: {}", title, e);
+            return e.toString();
+        }
+    }
+    @GetMapping("/books2")
+    public String searchBooksByAuthor(@RequestParam String Author) {
+        try {
+            return bookService.searchBooksByAuthor(Author);
+        } catch (Exception e) {
+            logger.error("Unexpected error occurred while searching books with title: {}", Author, e);
             return e.toString();
         }
     }
