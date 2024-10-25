@@ -8,6 +8,7 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/shelves")
@@ -152,26 +153,32 @@ public class ShelfController {
                 return "Keine Regale gefunden";
             }
 
-            // Zufälliges Regal auswählen
-            Shelf randomShelf = shelves.get(new Random().nextInt(shelves.size()));
+            // Filtere Regale, die keine Bücher haben
+            List<Shelf> shelvesWithBooks = shelves.stream()
+                    .filter(shelf -> shelf.getBooks() != null && !shelf.getBooks().isEmpty())
+                    .collect(Collectors.toList());
 
-            // Überprüfen, ob Bücher im Regal vorhanden sind
-            if (randomShelf.getBooks() == null || randomShelf.getBooks().isEmpty()) {
-                return "Keine Bücher in dem ausgewählten Regal gefunden";
+            // Überprüfen, ob nach dem Filtern noch Regale übrig sind
+            if (shelvesWithBooks.isEmpty()) {
+                return "Keine Regale mit Büchern gefunden";
             }
 
-            // Zufälliges Buch auswählen
+            // Zufälliges Regal mit Büchern auswählen
+            Shelf randomShelf = shelvesWithBooks.get(new Random().nextInt(shelvesWithBooks.size()));
+
+            // Zufälliges Buch aus dem Regal auswählen
             Book randomBook = randomShelf.getBooks().get(new Random().nextInt(randomShelf.getBooks().size()));
 
             // Den Autor des Buches zurückgeben
             String author = randomBook.getAuthor();
 
-            return bookService.searchBooksByAuthor(author);
+            return bookService.searchBooksByAuthor(author, 12);
 
         } catch (Exception e) {
             return "Ein unerwarteter Fehler ist aufgetreten: " + e.getMessage();
         }
     }
+
 
     private String validateAndExtractUsername(String token) {
         if (token != null && token.startsWith("Bearer ")) {

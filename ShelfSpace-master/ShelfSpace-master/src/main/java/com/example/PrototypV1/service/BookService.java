@@ -34,9 +34,9 @@ public class BookService {
         }
     }
 
-    public String searchBooksByAuthor(String author) {
+    public String searchBooksByAuthor(String author, int maxResults) {
         String encodedAuthor = URLEncoder.encode(author, StandardCharsets.UTF_8);
-        String url = "https://www.googleapis.com/books/v1/volumes?q=inauthor:" + encodedAuthor + "&maxResults=20&key=" + apiKey;
+        String url = "https://www.googleapis.com/books/v1/volumes?q=inauthor:" + encodedAuthor + "&maxResults=" + maxResults + "&key=" + apiKey;
 
         try {
             ResponseEntity<String> response = restTemplate.getForEntity(url, String.class, Collections.singletonMap("apiKey", apiKey));

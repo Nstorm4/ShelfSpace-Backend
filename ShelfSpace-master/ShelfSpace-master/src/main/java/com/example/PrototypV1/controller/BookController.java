@@ -29,7 +29,7 @@ public class BookController {
     @GetMapping("/books2")
     public String searchBooksByAuthor(@RequestParam String author) {
         try {
-            return bookService.searchBooksByAuthor(author);
+            return bookService.searchBooksByAuthor(author, 20);
         } catch (Exception e) {
             logger.error("Unexpected error occurred while searching books with title: {}", author, e);
             return e.toString();
