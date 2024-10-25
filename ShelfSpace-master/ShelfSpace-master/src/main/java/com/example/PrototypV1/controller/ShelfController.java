@@ -3,6 +3,7 @@ package com.example.PrototypV1.controller;
 import com.example.PrototypV1.manager.*;
 import com.example.PrototypV1.model.*;
 import com.example.PrototypV1.service.*;
+import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import java.io.*;
@@ -14,10 +15,12 @@ public class ShelfController {
 
     private final ShelfService shelfService;
     private final TokenManager tokenManager;
+    private BookService bookService;
 
-    public ShelfController(ShelfService shelfService, TokenManager tokenManager) {
+    public ShelfController(ShelfService shelfService, TokenManager tokenManager, BookService bookService) {
         this.shelfService = shelfService;
         this.tokenManager = tokenManager;
+        this.bookService = bookService;
     }
 
     // @CrossOrigin(origins = "http://shelfspace-react.apps.01.cf.eu01.stackit.cloud")
@@ -131,6 +134,42 @@ public class ShelfController {
             return ResponseEntity.ok(allShelves);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ein unerwarteter Fehler ist aufgetreten: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/getRecommendation")
+    public String getRecommendation(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        try {
+            String username = validateAndExtractUsername(token);
+            if (username == null) {
+                return "Ungültiges Token";
+            }
+
+            List<Shelf> shelves = shelfService.getShelvesByUsername(username);
+
+            // Überprüfen, ob überhaupt Regale vorhanden sind
+            if (shelves == null || shelves.isEmpty()) {
+                return "Keine Regale gefunden";
+            }
+
+            // Zufälliges Regal auswählen
+            Shelf randomShelf = shelves.get(new Random().nextInt(shelves.size()));
+
+            // Überprüfen, ob Bücher im Regal vorhanden sind
+            if (randomShelf.getBooks() == null || randomShelf.getBooks().isEmpty()) {
+                return "Keine Bücher in dem ausgewählten Regal gefunden";
+            }
+
+            // Zufälliges Buch auswählen
+            Book randomBook = randomShelf.getBooks().get(new Random().nextInt(randomShelf.getBooks().size()));
+
+            // Den Autor des Buches zurückgeben
+            String author = randomBook.getAuthor();
+
+            return bookService.searchBooksByAuthor(author);
+
+        } catch (Exception e) {
+            return "Ein unerwarteter Fehler ist aufgetreten: " + e.getMessage();
         }
     }
 
