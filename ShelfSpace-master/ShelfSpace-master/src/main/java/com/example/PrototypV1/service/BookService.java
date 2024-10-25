@@ -34,15 +34,15 @@ public class BookService {
         }
     }
 
-    public String searchBooksByAuthor(String Author) {
-        String encodedAuthor = URLEncoder.encode(Author, StandardCharsets.UTF_8);
+    public String searchBooksByAuthor(String author) {
+        String encodedAuthor = URLEncoder.encode(author, StandardCharsets.UTF_8);
         String url = "https://www.googleapis.com/books/v1/volumes?q=inauthor:" + encodedAuthor + "&maxResults=20&key=" + apiKey;
 
         try {
             ResponseEntity<String> response = restTemplate.getForEntity(url, String.class, Collections.singletonMap("apiKey", apiKey));
             return response.getBody();
         } catch (Exception e) {
-            logger.error("Error occurred while calling Google Books API with title: {} and url: {}", Author, url, e);
+            logger.error("Error occurred while calling Google Books API with title: {} and url: {}", author, url, e);
             return e.toString();
         }
     }
