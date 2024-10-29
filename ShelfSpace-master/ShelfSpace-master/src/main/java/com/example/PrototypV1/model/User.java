@@ -15,10 +15,8 @@ public class User {
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnoreProperties("user")  // Ignoriert die user-Referenz bei der Serialisierung von Shelves
+    @JsonIgnoreProperties("user")
     private List<Shelf> shelves;
-
-    // Getter, Setter, Constructors
 
     public User() {}
 

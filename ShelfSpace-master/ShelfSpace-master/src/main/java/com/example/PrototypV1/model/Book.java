@@ -17,7 +17,7 @@ public class Book {
     private String coverUrl;
 
     @ManyToMany(mappedBy = "books")
-    @JsonIgnore // Markiert diese Seite der Beziehung als rückwärtig (wird nicht serialisiert)
+    @JsonIgnore
     private List<Shelf> shelves;
 
     public Book(String title, String author, String coverUrl) {

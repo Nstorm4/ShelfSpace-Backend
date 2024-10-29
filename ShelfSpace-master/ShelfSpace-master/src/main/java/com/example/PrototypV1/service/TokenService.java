@@ -1,8 +1,6 @@
-package com.example.PrototypV1.manager;
+package com.example.PrototypV1.service;
 
-import com.example.PrototypV1.Repository.ShelfRepository;
 import com.example.PrototypV1.Repository.TokenRepository;
-import com.example.PrototypV1.Repository.UserRepository;
 import com.example.PrototypV1.model.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,14 +11,14 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 @Service
-public class TokenManager {
+public class TokenService {
 
-    private static final Logger logger = LoggerFactory.getLogger(TokenManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(TokenService.class);
 
     private final TokenRepository tokenRepository;
 
     @Autowired
-    public TokenManager(TokenRepository tokenRepository) {
+    public TokenService(TokenRepository tokenRepository) {
        this.tokenRepository = tokenRepository;
     }
 

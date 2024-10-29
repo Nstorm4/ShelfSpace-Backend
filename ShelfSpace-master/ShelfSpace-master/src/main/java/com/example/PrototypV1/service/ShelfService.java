@@ -27,9 +27,6 @@ public class ShelfService {
         this.userRepository = userRepository;
     }
 
-    /**
-     * Erstellt ein neues Regal für einen Benutzer basierend auf dem Benutzernamen.
-     */
     public void createShelf(Shelf shelf, String username) {
         User user = userRepository.findByUsername(username);
         if (user == null) {
@@ -42,9 +39,6 @@ public class ShelfService {
         logger.info("Regal '{}' für Benutzer '{}' erfolgreich erstellt", shelf.getName(), username);
     }
 
-    /**
-     * Lädt alle Regale eines Benutzers.
-     */
     public List<Shelf> getShelvesByUsername(String username) {
         User user = userRepository.findByUsername(username);
         if (user == null) {
@@ -57,9 +51,6 @@ public class ShelfService {
         return shelves;
     }
 
-    /**
-     * Fügt ein Buch zu einem Regal hinzu.
-     */
     public void addBookToShelf(String username, String shelfName, Book book) {
         User user = userRepository.findByUsername(username);
         if (user == null) {
@@ -82,12 +73,8 @@ public class ShelfService {
         }
     }
 
-    /**
-     * Löscht ein Regal eines Benutzers basierend auf dem Benutzernamen und Regalnamen.
-     */
     public void deleteShelf(String shelfName, String username) {
         User user = userRepository.findByUsername(username);
-        System.out.println("I am in the ShelfService deleteShelf and this is the user:" + user);
         if (user == null) {
             logger.warn("Benutzer '{}' nicht gefunden", username);
             throw new IllegalArgumentException("Benutzer nicht gefunden");
@@ -96,7 +83,6 @@ public class ShelfService {
         Optional<Shelf> shelfOptional = user.getShelves().stream()
                 .filter(shelf -> shelf.getName().equals(shelfName))
                 .findFirst();
-        System.out.println("I am in the Service, I found the shelf: " + shelfOptional.toString());
 
         if (shelfOptional.isPresent()) {
             Shelf shelf = shelfOptional.get();
@@ -109,9 +95,6 @@ public class ShelfService {
         }
     }
 
-    /**
-     * Entfernt ein Buch aus einem Regal basierend auf dem Benutzernamen und Regalnamen.
-     */
     public void removeBookFromShelf(String username, String shelfName, Book bookToRemove) {
         User user = userRepository.findByUsername(username);
         if (user == null) {
@@ -143,33 +126,4 @@ public class ShelfService {
             throw new IllegalArgumentException("Regal nicht gefunden");
         }
     }
-
-    /**
-     * Gibt alle Regale aller Benutzer als String zurück, einschließlich der Bücher und Nutzerinformationen.
-     */
-    public String getAllShelves() {
-        StringBuilder result = new StringBuilder();
-        List<Shelf> shelves = shelfRepository.findAll(); // Alle Regale aus der Datenbank abrufen
-
-        logger.info("Versuche, alle Regale abzurufen.");
-
-        for (Shelf shelf : shelves) {
-            result.append("Regal: ").append(shelf.getName()).append("\n");
-            result.append("Benutzer: ").append(shelf.getUser().getUsername()).append("\n"); // Benutzername aus dem Regal
-
-            if (shelf.getBooks() != null && !shelf.getBooks().isEmpty()) {
-                result.append("Bücher:\n");
-                for (Book book : shelf.getBooks()) {
-                    result.append("- ").append(book.getTitle()).append(" von ").append(book.getAuthor()).append("\n");
-                }
-            } else {
-                result.append("Keine Bücher in diesem Regal.\n");
-            }
-            result.append("\n"); // Leerzeile zwischen den Regalen
-        }
-
-        logger.info("Alle Regale erfolgreich abgerufen.");
-        return result.toString();
-    }
-
 }

@@ -1,6 +1,5 @@
 package com.example.PrototypV1.service;
 
-import com.example.PrototypV1.manager.TokenManager;
 import com.example.PrototypV1.model.User;
 import com.example.PrototypV1.Repository.UserRepository;
 import org.slf4j.Logger;
@@ -14,15 +13,15 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final TokenManager tokenManager;
+    private final TokenService tokenService;
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
-    public UserService(UserRepository userRepository, TokenManager tokenManager) {
+    public UserService(UserRepository userRepository, TokenService tokenService) {
         this.userRepository = userRepository;
-        this.tokenManager = tokenManager;
+        this.tokenService = tokenService;
     }
-    // Benutzer registrieren
+
     public void register(User user) {
         if (userRepository.existsById(user.getUsername())) {
             logger.warn("Benutzer {} existiert bereits", user.getUsername());
@@ -33,12 +32,11 @@ public class UserService {
         logger.info("Benutzer {} erfolgreich registriert", user.getUsername());
     }
 
-    // Benutzer-Login
     public String login(String username, String password) {
         User user = userRepository.findByUsername(username);
 
         if (user != null && user.getPassword().equals(password)) {
-            String token = tokenManager.generateTokenForUser(username);
+            String token = tokenService.generateTokenForUser(username);
             logger.info("Login erfolgreich für Benutzer: {}", username);
             return token;
         }
@@ -47,27 +45,12 @@ public class UserService {
         return null;
     }
 
-    // Überprüfen, ob der Benutzer existiert
     public boolean userExists(String username) {
         return userRepository.existsById(username);
     }
 
-    // Alle Benutzer abrufen
-    public String getAllUsers() {
-        List<User> users = userRepository.findAll();
-        StringBuilder result = new StringBuilder();
-
-        for (User user : users) {
-            result.append(user.getUsername()).append("\n");
-        }
-
-        logger.info("Benutzerliste erfolgreich abgerufen");
-        return result.toString();
-    }
-
-    // Benutzer-Logout
     public void logout(String token) {
-        tokenManager.removeToken(token);
+        tokenService.removeToken(token);
         logger.info("Benutzer mit Token {} erfolgreich ausgeloggt", token);
     }
 }

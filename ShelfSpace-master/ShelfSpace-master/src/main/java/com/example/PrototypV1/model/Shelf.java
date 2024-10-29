@@ -29,8 +29,6 @@ public class Shelf {
     )
     private List<Book> books;
 
-    // Getter und Setter
-
     public Shelf() {}
 
     public Shelf(String name, User user) {
