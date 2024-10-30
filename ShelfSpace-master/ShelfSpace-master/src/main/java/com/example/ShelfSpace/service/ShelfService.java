@@ -86,8 +86,8 @@ public class ShelfService {
 
         if (shelfOptional.isPresent()) {
             Shelf shelf = shelfOptional.get();
-            user.getShelves().remove(shelf);  // Entferne das Regal aus der Liste des Benutzers
-            shelfRepository.delete(shelf);    // Lösche das Regal aus der Datenbank
+            user.getShelves().remove(shelf);
+            shelfRepository.delete(shelf);
             logger.info("Regal '{}' für Benutzer '{}' erfolgreich gelöscht", shelfName, username);
         } else {
             logger.warn("Regal '{}' für Benutzer '{}' nicht gefunden", shelfName, username);

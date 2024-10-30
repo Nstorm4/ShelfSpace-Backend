@@ -56,18 +56,16 @@ public class BookService {
         JsonNode root = objectMapper.readTree(jsonResponse);
         JsonNode items = root.path("items");
 
-        // Überprüfen, ob "items" ein Array ist und nicht leer ist
         if (items.isArray() && items.size() > 0) {
             for (JsonNode item : items) {
                 JsonNode volumeInfo = item.path("volumeInfo");
 
-                // Sicherstellen, dass "volumeInfo" vorhanden ist
                 if (volumeInfo != null) {
-                    String title = volumeInfo.path("title").asText("Unbekannter Titel"); // Default-Wert
+                    String title = volumeInfo.path("title").asText("Unbekannter Titel");
                     String author = volumeInfo.path("authors").isArray() && volumeInfo.path("authors").size() > 0
-                            ? volumeInfo.path("authors").get(0).asText("Unbekannter Autor") // Default-Wert
+                            ? volumeInfo.path("authors").get(0).asText("Unbekannter Autor")
                             : "Unbekannter Autor"; // Fallback
-                    String coverUrl = volumeInfo.path("imageLinks").path("thumbnail").asText("Keine Cover-URL verfügbar"); // Default-Wert
+                    String coverUrl = volumeInfo.path("imageLinks").path("thumbnail").asText("Keine Cover-URL verfügbar");
 
                     Book book = new Book();
                     book.setTitle(title);
@@ -78,10 +76,8 @@ public class BookService {
                 }
             }
         } else {
-            // Optional: Logik, wenn keine Bücher gefunden werden
-            System.out.println("Keine Bücher gefunden.");
+            logger.error("Keine Bücher gefunden.");
         }
-
         return books;
     }
 }
