@@ -46,9 +46,4 @@ public class UserService {
     public boolean userExists(String username) {
         return userRepository.existsById(username);
     }
-
-    public void logout(String token) {
-        tokenService.removeToken(token);
-        logger.info("Benutzer mit Token {} erfolgreich ausgeloggt", token);
-    }
 }
