@@ -1,8 +1,7 @@
-package com.example.PrototypV1;
+package com.example.ShelfSpace;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
 
 
 @SpringBootApplication

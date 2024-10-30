@@ -1,13 +1,11 @@
-package com.example.PrototypV1.service;
+package com.example.ShelfSpace.service;
 
-import com.example.PrototypV1.model.User;
-import com.example.PrototypV1.Repository.UserRepository;
+import com.example.ShelfSpace.model.User;
+import com.example.ShelfSpace.Repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class UserService {

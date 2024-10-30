@@ -1,4 +1,4 @@
-package com.example.PrototypV1.model;
+package com.example.ShelfSpace.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

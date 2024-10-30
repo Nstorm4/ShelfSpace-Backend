@@ -1,6 +1,6 @@
-package com.example.PrototypV1.Repository;
+package com.example.ShelfSpace.Repository;
 
-import com.example.PrototypV1.model.Token;
+import com.example.ShelfSpace.model.Token;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

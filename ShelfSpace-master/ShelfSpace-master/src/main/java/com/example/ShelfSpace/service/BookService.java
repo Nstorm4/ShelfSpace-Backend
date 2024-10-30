@@ -1,6 +1,6 @@
-package com.example.PrototypV1.service;
+package com.example.ShelfSpace.service;
 
-import com.example.PrototypV1.model.Book;
+import com.example.ShelfSpace.model.Book;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

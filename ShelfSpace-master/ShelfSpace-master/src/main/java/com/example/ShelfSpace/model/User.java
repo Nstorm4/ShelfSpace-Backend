@@ -1,4 +1,4 @@
-package com.example.PrototypV1.model;
+package com.example.ShelfSpace.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;

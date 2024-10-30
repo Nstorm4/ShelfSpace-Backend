@@ -1,4 +1,4 @@
-package com.example.PrototypV1.config;
+package com.example.ShelfSpace.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

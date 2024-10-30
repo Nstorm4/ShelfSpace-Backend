@@ -1,6 +1,5 @@
-package com.example.PrototypV1.model;
+package com.example.ShelfSpace.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 

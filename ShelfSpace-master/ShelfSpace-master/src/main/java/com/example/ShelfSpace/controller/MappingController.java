@@ -1,7 +1,7 @@
-package com.example.PrototypV1.controller;
+package com.example.ShelfSpace.controller;
 
-import com.example.PrototypV1.model.*;
-import com.example.PrototypV1.service.*;
+import com.example.ShelfSpace.model.*;
+import com.example.ShelfSpace.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;

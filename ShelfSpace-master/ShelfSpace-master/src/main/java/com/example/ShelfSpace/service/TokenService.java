@@ -1,7 +1,7 @@
-package com.example.PrototypV1.service;
+package com.example.ShelfSpace.service;
 
-import com.example.PrototypV1.Repository.TokenRepository;
-import com.example.PrototypV1.model.Token;
+import com.example.ShelfSpace.Repository.TokenRepository;
+import com.example.ShelfSpace.model.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;

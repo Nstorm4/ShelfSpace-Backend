@@ -1,10 +1,10 @@
-package com.example.PrototypV1.service;
+package com.example.ShelfSpace.service;
 
-import com.example.PrototypV1.model.Book;
-import com.example.PrototypV1.model.Shelf;
-import com.example.PrototypV1.model.User;
-import com.example.PrototypV1.Repository.ShelfRepository;
-import com.example.PrototypV1.Repository.UserRepository;
+import com.example.ShelfSpace.model.Book;
+import com.example.ShelfSpace.model.Shelf;
+import com.example.ShelfSpace.model.User;
+import com.example.ShelfSpace.Repository.ShelfRepository;
+import com.example.ShelfSpace.Repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

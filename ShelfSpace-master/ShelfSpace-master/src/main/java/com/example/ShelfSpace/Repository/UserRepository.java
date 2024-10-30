@@ -1,6 +1,6 @@
-package com.example.PrototypV1.Repository;
+package com.example.ShelfSpace.Repository;
 
-import com.example.PrototypV1.model.User;
+import com.example.ShelfSpace.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

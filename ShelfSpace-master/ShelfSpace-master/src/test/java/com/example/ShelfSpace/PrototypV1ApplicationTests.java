@@ -1,4 +1,4 @@
-package com.example.PrototypV1;
+package com.example.ShelfSpace;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
